@@ -64,7 +64,6 @@ describe("Literal", function () {
         })
     });
 
-
     /** @test {Literal#toNT} */
     describe("#toNT", function () {
         it("should return the N-Triples representation", function () {
