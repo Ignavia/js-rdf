@@ -1,0 +1,46 @@
+{
+  "name": "@ignavia/rdf",
+  "version": "1.0.0",
+  "description": "An implementation of RDF Interfaces",
+  "keywords": [
+    "rdf",
+    "linked-data"
+  ],
+  "homepage": "http://ignavia.github.io/js-rdf",
+  "bugs": "https://github.com/Ignavia/js-rdf/issues",
+  "license": "MIT",
+  "author": "Lars Reimann <mail@lars-reimann.eu> (http://lars-reimann.eu)",
+  "files": [
+    "dist/"
+  ],
+  "main": "dist/rdf.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Ignavia/js-rdf.git"
+  },
+  "scripts": {
+    "build": "jspm build ./src/rdf.js ./dist/rdf.js --format cjs --skip-source-maps --minify",
+    "coverage": "babel-node node_modules/isparta/bin/isparta cover --report text --report html node_modules/mocha/bin/_mocha -- --reporter dot",
+    "doc": "esdoc -c esdoc.json",
+    "test": "mocha --compilers js:babel-register"
+  },
+  "dependencies": {
+    "@ignavia/util": "^1.1.7"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.5.1",
+    "babel-preset-es2015": "^6.5.0",
+    "babel-register": "^6.5.2",
+    "chai": "^3.5.0",
+    "esdoc": "^0.4.4",
+    "isparta": "^4.0.0",
+    "jspm": "^0.17.0-beta.6",
+    "mocha": "^2.4.5"
+  },
+  "jspm": {
+    "name": "@ignavia/rdf",
+    "devDependencies": {
+      "plugin-babel": "npm:systemjs-plugin-babel@^0.0.2"
+    }
+  }
+}

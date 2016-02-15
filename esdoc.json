@@ -1,0 +1,10 @@
+{
+    "source": "./src",
+    "destination": "./doc",
+    "index": "./README.md",
+    "package": "./package.json",
+    "title": "JavaScript RDF",
+    "manual": {
+        "changelog": ["CHANGELOG.md"]
+    }
+}

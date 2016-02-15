@@ -1,0 +1,27 @@
+language: node_js
+node_js:
+- '4.1'
+install: # install NPM dependencies
+- npm install
+script: # run tests
+- npm run test
+before_deploy: # install JSPM dependencies and create the bundle and the doc
+- jspm config registries.github.auth $JSPM_GITHUB_AUTH_TOKEN
+- jspm install
+- BABEL_ENV=production npm run build
+- npm run doc
+deploy:
+  provider: npm # publish bundle on NPM
+  email: "mail@lars-reimann.eu"
+  api_key: "$NPM_AUTH_TOKEN"
+  skip_cleanup: true
+  on:
+    tags: true
+after_deploy: # upload doc to gh-pages
+- cd doc
+- git init
+- git config user.name "Travis CI"
+- git config user.email "mail@lars-reimann.eu"
+- git add .
+- git commit -m "Deploying to GitHub Pages"
+- git push -fq "https://$GITHUB_API_KEY@github.com/$TRAVIS_REPO_SLUG" master:gh-pages > /dev/null 2>&1
