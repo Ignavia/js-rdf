@@ -7,7 +7,7 @@ export const xmlSchemaTypes = {
     double:             "http://www.w3.org/2001/XMLSchema#double",
     float:              "http://www.w3.org/2001/XMLSchema#float",
     decimal:            "http://www.w3.org/2001/XMLSchema#decimal",
-    integer:            "http://www.w3.org/2001/XMLSchema#positiveInteger",
+    positiveInteger:    "http://www.w3.org/2001/XMLSchema#positiveInteger",
     nonNegativeInteger: "http://www.w3.org/2001/XMLSchema#nonNegativeInteger",
     integer:            "http://www.w3.org/2001/XMLSchema#integer",
     nonPositiveInteger: "http://www.w3.org/2001/XMLSchema#nonPositiveInteger",

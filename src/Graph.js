@@ -1,49 +1,43 @@
 export default class Graph {
     constructor() {
-        
-        this.spo = new Map();
-        this.sop = new Map();
-        this.pso = new Map();
+
+        this.spo = new Map(); // TODO spo, pos, osp are enough
         this.pos = new Map();
-        this.ops = new Map();
         this.osp = new Map();
-        
+
         /**
          * @type {Number}
          * The amount of triples in this graph.
          */
         this.length = 0;
-            
+
         // send events blank nodes and named nodes catch them and add literals to their itnernal indexes
         // list of literals, named nodes and blank nodes??
     }
 
     add(triple) {
         const s = triple.subject.valueOf(), p = triple.predicate, o = triple.object;
-        
+
         this.addToIndex(this.spo, s, p, o, triple);
-        this.addToIndex(this.sop, s, o, p, triple);
-        this.addToIndex(this.pso, p, s, o, triple);
         this.addToIndex(this.pos, p, o, s, triple);
-        this.addToIndex(this.ops, o, p, s, triple);
         this.addToIndex(this.osp, o, s, p, triple);
         // if a subject / predicate / object exists alreaddy, you need to take this one
         this.length++; // TODO check if duplicate (before the 6 add calls; return)
 
         return this;
     }
-    
+
     addToIndex(index, x, y, z, triple) {
         const stage1 = index;
         if (!stage1.has(x)) {
             stage1.set(x, new Map());
         }
-        
+
         const stage2 = stage1.get(x);
         if (!stage2.has(y)) {
             stage2.set(y, new Map());
         }
-        
+
         const stage3 = stage2.get(y);
         if (!stage3.has(z)) {
             stage3.set(z, triple);
@@ -52,37 +46,34 @@ export default class Graph {
 
     addAll(graph) {
         for (let triple of graph) {
-            this.add(triple);    
+            this.add(triple);
         }
         return this;
     }
 
     remove(triple) {
         const s = triple.subject, p = triple.predicate, o = triple.object;
-        
-        this.removeFromIndex(this.spo, s, p, o); // store 
-        this.removeFromIndex(this.sop, s, o, p);
-        this.removeFromIndex(this.pso, p, s, o);
+
+        this.removeFromIndex(this.spo, s, p, o); // store
         this.removeFromIndex(this.pos, p, o, s);
-        this.removeFromIndex(this.ops, o, p, s);
         this.removeFromIndex(this.osp, o, s, p);
-        
+
         this.length--; // TODO check if it exists (do it before the 6 remove calls and return)
-        
+
         return this;
     }
-    
+
     removeFromIndex(index, x, y, z) {
         const stage1 = index,
               stage2 = stage1.get(x),
               stage3 = stage2.get(y);
-        
+
         stage3.delete(z);
-        
+
         if (stage3.size() === 0) {
             stage2.delete(y);
         }
-        
+
         if (stage2.size() === 0) {
             stage1.delete(x);
         }
@@ -99,9 +90,9 @@ export default class Graph {
 
     match({subject, predicate, object} = {}, limit) {
         const s = subject, p = predicate, o = object;
-        
+
         //if subject is an RDFNode, use value of on it
-        
+
     }
 
     some(f) {
@@ -141,25 +132,21 @@ export default class Graph {
         // Find matches and remove them
     }
 
-    *[Symbol.iterator]() {
+    * [Symbol.iterator]() {
         const stage1 = this.spo;
         for (let s of stage1.keys()) {
-            const stage2 = stage1.get(s); 
+            const stage2 = stage1.get(s);
             for (let p of stage2.keys()) {
                 const stage3 = stage2.get(p);
                 for (let o of stage3.keys()) {
                     yield stage3.get(o);
-                } 
+                }
             }
         }
     }
 
     toArray() {
         return [...this];
-    }
-
-    get length() {
-
     }
 
     // Listeners

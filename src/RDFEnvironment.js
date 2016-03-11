@@ -21,7 +21,7 @@ export default class RDFEnvironment extends Profile {
         super();
     }
 
-    createGraph(...triples) {
+    createGraph(triples) {
         const g = new Graph();
         g.addAll(triples);
     }

@@ -2,27 +2,27 @@ import RDFNode                 from "./RDFNode.js";
 import {xmlSchemaTypes as xsd} from "./xmlSchemaTypes.js";
 
 const converter = {
-    [xsd.string]:             (s) => s,
+    [xsd.string]:             String,
     [xsd.boolean]:            (s) => s === "true",
     [xsd.dateTime]:           (s) => new Date(s),
     [xsd.date]:               (s) => new Date(s),
     //[xsd.time]:               (s) => new Date(s),
-    [xsd.double]:             (s) => Number(s),
-    [xsd.float]:              (s) => Number(s),
-    [xsd.decimal]:            (s) => Number(s),
-    [xsd.positiveInteger]:    (s) => Number(s),
-    [xsd.nonNegativeInteger]: (s) => Number(s),
-    [xsd.integer]:            (s) => Number(s),
-    [xsd.nonPositiveInteger]: (s) => Number(s),
-    [xsd.negativeInteger]:    (s) => Number(s),
-    [xsd.long]:               (s) => Number(s),
-    [xsd.int]:                (s) => Number(s),
-    [xsd.short]:              (s) => Number(s),
-    [xsd.byte]:               (s) => Number(s),
-    [xsd.unsignedLong]:       (s) => Number(s),
-    [xsd.unsignedInt]:        (s) => Number(s),
-    [xsd.unsignedShort]:      (s) => Number(s),
-    [xsd.unsignedByte]:       (s) => Number(s)
+    [xsd.double]:             Number,
+    [xsd.float]:              Number,
+    [xsd.decimal]:            Number,
+    [xsd.positiveInteger]:    Number,
+    [xsd.nonNegativeInteger]: Number,
+    [xsd.integer]:            Number,
+    [xsd.nonPositiveInteger]: Number,
+    [xsd.negativeInteger]:    Number,
+    [xsd.long]:               Number,
+    [xsd.int]:                Number,
+    [xsd.short]:              Number,
+    [xsd.byte]:               Number,
+    [xsd.unsignedLong]:       Number,
+    [xsd.unsignedInt]:        Number,
+    [xsd.unsignedShort]:      Number,
+    [xsd.unsignedByte]:       Number
 }
 
 /**
