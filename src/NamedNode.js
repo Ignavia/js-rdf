@@ -2,6 +2,8 @@ import RDFNode from "./RDFNode.js";
 
 /**
  * Represents an RDF named node.
+ * 
+ * @see https://www.w3.org/TR/rdf-interfaces/#named-nodes
  */
 export default class NamedNode extends RDFNode {
 

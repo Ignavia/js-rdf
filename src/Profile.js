@@ -5,7 +5,7 @@ import TermMap   from "./TermMap.js";
  * Provides an easy to use context for negotiating between CURIEs, Terms and
  * IRIs.
  *
- * @see https://www.w3.org/TR/rdf-interfaces/#idl-def-Profile
+ * @see https://www.w3.org/TR/rdf-interfaces/#profiles
  */
 export default class Profile {
 
@@ -45,7 +45,7 @@ export default class Profile {
      * A string term or CURIE.
      *
      * @return {String}
-     * The corresponding IRI or null of no match was found.
+     * The corresponding IRI.
      *
      * @see https://www.w3.org/TR/rdf-interfaces/#widl-Profile-resolve-DOMString-DOMString-toresolve
      */
@@ -136,5 +136,18 @@ export default class Profile {
     importProfile(profile, override = false) {
         this.prefixes.addAll(profile.prefixes, override);
         this.terms.addAll(profile.terms, override);
+    }
+    
+    /**
+     * Returns a copy of this Profile.
+     * 
+     * @return {Profile}
+     * A copy of this Profile.
+     */
+    clone() {
+        return new Profile({
+            prefixes: this.prefixes.clone(),
+            terms:    this.terms.clone()
+        });
     }
 }

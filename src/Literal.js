@@ -1,6 +1,11 @@
 import RDFNode                 from "./RDFNode.js";
 import {xmlSchemaTypes as xsd} from "./xmlSchemaTypes.js";
 
+/**
+ * Lists how to convert a string to a specific datatype.
+ *
+ * @ignore
+ */
 const converter = {
     [xsd.string]:             String,
     [xsd.boolean]:            (s) => s === "true",
@@ -23,10 +28,12 @@ const converter = {
     [xsd.unsignedInt]:        Number,
     [xsd.unsignedShort]:      Number,
     [xsd.unsignedByte]:       Number
-}
+};
 
 /**
  * Represents an RDF literal.
+ *
+ * @see https://www.w3.org/TR/rdf-interfaces/#literals
  */
 export default class Literal extends RDFNode {
 
@@ -34,10 +41,13 @@ export default class Literal extends RDFNode {
      * @param {String} value
      * The value of this literal.
      *
-     * @param {String} [language=null]
+     * @param {Object} options
+     * Contains the remaining parameters.
+     *
+     * @param {String} [options.language=null]
      * The language of this literal.
      *
-     * @param {String} [datatype=null]
+     * @param {String} [options.datatype=null]
      * The datatype of this literal.
      */
     constructor(value, {language = null, datatype = null} = {}) {
@@ -88,6 +98,15 @@ export default class Literal extends RDFNode {
                (this.datatype.equals(toCompare.datatype));
     }
 
+    /**
+     * Gets the time of Date object. Other objects are returned unchanged.
+     *
+     * @param {*} p
+     * The value to normalize.
+     *
+     * @return {*}
+     * The normalized value.
+     */
     normalize(p) {
         if (p instanceof Date) {
             return p.getTime();
@@ -95,6 +114,9 @@ export default class Literal extends RDFNode {
         return p;
     }
 
+    /**
+     * @override
+     */
     valueOf() {
         if (this.language === null && this.datatype !== null && converter[this.datatype.toString()]) {
             return converter[this.datatype.toString()](this.nominalValue);

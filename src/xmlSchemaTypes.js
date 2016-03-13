@@ -20,4 +20,4 @@ export const xmlSchemaTypes = {
     unsignedInt:        "http://www.w3.org/2001/XMLSchema#unsignedInt",
     unsingedShort:      "http://www.w3.org/2001/XMLSchema#unsignedShort",
     unsingedByte:       "http://www.w3.org/2001/XMLSchema#unsignedByte"
-}
+};

@@ -1,18 +1,38 @@
+import {GumpMap} from "@ignavia/util";
+
+/**
+ * An RDF graph.
+ * 
+ * @see https://www.w3.org/TR/rdf-interfaces/#graphs
+ */
 export default class Graph {
-    constructor() {
+    
+    /**
+     * @param {Array} initialValues
+     * An array with all triples to add initially.
+     */
+    constructor(initialValues) {
 
-        this.spo = new Map(); // TODO spo, pos, osp are enough
-        this.pos = new Map();
-        this.osp = new Map();
-
-        /**
-         * @type {Number}
-         * The amount of triples in this graph.
-         */
-        this.length = 0;
+        this.spo = new GumpMap();
+        this.pos = new GumpMap();
+        this.osp = new GumpMap();
 
         // send events blank nodes and named nodes catch them and add literals to their itnernal indexes
         // list of literals, named nodes and blank nodes??
+        
+        // Add initial values
+        for (let triple of initialValues) {
+            this.add(triple);
+        }
+    }
+  
+    /**
+     * The number of triples in this graph.
+     * 
+     * @type {Number}
+     */  
+    get length() {
+        return this.spo.size;
     }
 
     add(triple) {
@@ -148,94 +168,4 @@ export default class Graph {
     toArray() {
         return [...this];
     }
-
-    // Listeners
 }
-
-// interface Graph {
-//     readonly attribute sequence<TripleAction> actions;
-//     Graph            addAction (TripleAction action, optional boolean run); | addListener
-// };
-
-// export default class GraphData {
-//     constructor() {
-//         this.prefixToIRI = new Map();
-//         this.iriToPrefix = new Map();
-
-//         this.prefixCounter = new Map();
-//     }
-
-//     addPrefix(prefix, iri) {
-
-//         // A prefix for this IRI exists already
-//         if (this.iriToPrefix.has(iri)) {
-//             return this;
-//         }
-
-//         // The prefix is not assigned yet
-//         if (!this.prefixCounter.has(prefix)) {
-//             this.prefixCounter.set(prefix, 0);
-//             this.prefixToIRI.set(prefix, iri);
-//             this.iriToPrefix.set(iri, prefix);
-//             return this;
-//         }
-
-//         // We already encountered this prefix
-
-//         // Rename old prefix to make it unambiguous
-//         if (this.prefixCounter.get(prefix) === 0) {
-//             this.prefixCounter.set(prefix, 1);
-
-//             const newPrefix = `p0_${prefix}`,
-//                   oldIRI    = this.prefixToIRI.get(prefix);
-//             this.prefixToIRI.delete(prefix);
-//             this.prefixToIRI.set(newPrefix, oldIRI);
-//             this.iriToPrefix.set(oldIRI, newPrefix);
-//         }
-
-//         // Add new prefix
-//         const c         = this.prefixCounter.get(prefix),
-//               newPrefix = `p${c}_${prefix}`;
-//         this.prefixCounter.set(prefix, c + 1);
-//         this.prefixToIRI.set(newPrefix, iri);
-//         this.iriToPrefix.set(iri, newPrefix);
-
-//         return this;
-//     }
-
-//     getIRIByPrefix(prefix) {
-//         return this.prefixToIRI.get(prefix);
-//     }
-
-//     getPrefixes() {
-//         return [...this.iterPrefixes()];
-//     }
-
-//     * iterPrefixes() {
-//         yield* this.prefixToIRI.keys();
-//     }
-
-//     getPrefixByIRI(iri) {
-//         return this.iriToPrefix.get(iri);
-//     }
-
-//     getIRIs() {
-//         return [...this.iterIRIs()];
-//     }
-
-//     * iterIRIs() {
-//         yield* this.iriToPrefix.keys();
-//     }
-
-//     qualify(s) {
-//         const parts = s.split(/:/);
-//         return this.getIRI(parts[0]) + this.parts[1];
-//     }
-
-//     unqualify(s) {
-//         const lastColon     = s.lastIndexOf(":"),
-//               lastSlash     = s.lastIndexOf("/");
-//               lastSeparator = Math.max(lastColon, lastSlash) + 1;
-//         return this.getPrefix(s.slice(0, lastSeparator)) + s.slice(lastSeparator);
-//     }
-// }
