@@ -77,9 +77,8 @@ export default class Literal extends RDFNode {
                    this.nominalValue  === toCompare.nominalValue  &&
                    this.language      === toCompare.language      &&
                    this.equalDatatypes(toCompare);
-
         }
-        return this.normalize(this.valueOf()) === this.normalize(toCompare);
+        return this[Symbol.toPrimitive]() === toCompare[Symbol.toPrimitive]();
     }
 
     /**
@@ -99,22 +98,6 @@ export default class Literal extends RDFNode {
     }
 
     /**
-     * Gets the time of Date object. Other objects are returned unchanged.
-     *
-     * @param {*} p
-     * The value to normalize.
-     *
-     * @return {*}
-     * The normalized value.
-     */
-    normalize(p) {
-        if (p instanceof Date) {
-            return p.getTime();
-        }
-        return p;
-    }
-
-    /**
      * @override
      */
     valueOf() {
@@ -129,6 +112,16 @@ export default class Literal extends RDFNode {
      */
     toString() {
         return `${this.nominalValue}`;
+    }
+    
+    /**
+     * @override
+     */
+    [Symbol.toPrimitive](hint) {
+        if (hint === "string") {
+            return this.toString();
+        }
+        return this.valueOf().valueOf(); 
     }
 
     /**

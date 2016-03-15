@@ -1,18 +1,27 @@
 SystemJS.config({
+  transpiler: "plugin-babel",
+  packages: {
+    "@ignavia/rdf": {
+      "main": "rdf.js",
+      "format": "esm",
+      "defaultExtension": "js"
+    }
+  }
+});
+
+SystemJS.config({
   packageConfigPaths: [
     "npm:@*/*.json",
     "npm:*.json",
     "github:*/*.json"
   ],
-  globalEvaluationScope: false,
-  transpiler: "plugin-babel",
-
   map: {
     "babel-preset-stage-0": "npm:babel-preset-stage-0@6.5.0",
     "buffer": "github:jspm/nodelibs-buffer@0.2.0-alpha",
     "core-js": "npm:core-js@1.2.6",
     "events": "github:jspm/nodelibs-events@0.2.0-alpha",
     "fs": "github:jspm/nodelibs-fs@0.2.0-alpha",
+    "lodash": "npm:lodash@4.6.1",
     "net": "github:jspm/nodelibs-net@0.2.0-alpha",
     "path": "github:jspm/nodelibs-path@0.2.0-alpha",
     "plugin-babel": "npm:systemjs-plugin-babel@0.0.2",
@@ -21,13 +30,7 @@ SystemJS.config({
     "tty": "github:jspm/nodelibs-tty@0.2.0-alpha",
     "util": "github:jspm/nodelibs-util@0.2.0-alpha"
   },
-
   packages: {
-    "@ignavia/rdf": {
-      "main": "rdf.js",
-      "format": "esm",
-      "defaultExtension": "js"
-    },
     "github:jspm/nodelibs-buffer@0.2.0-alpha": {
       "map": {
         "buffer-browserify": "npm:buffer@4.5.0"
