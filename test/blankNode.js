@@ -2,17 +2,14 @@ import {expect} from "chai";
 
 import {BlankNode, Literal, NamedNode} from "../src/rdf.js";
 
-/** @test {BlankNode} */
 describe("BlankNode", function () {
-
-    /** @test {BlankNode#equals} */
     describe("#equals", function () {
         it("should compare this node to another RDFNode by comparing their attributes", function () {
-            const b1 = new BlankNode("b1"),
-                  b2 = new BlankNode("b2"),
-                  b3 = new BlankNode("b1"),
-                  l  = new Literal("b1"),
-                  n  = new NamedNode("b1");
+            const b1 = new BlankNode("b1");
+            const b2 = new BlankNode("b2");
+            const b3 = new BlankNode("b1");
+            const l  = new Literal("b1");
+            const n  = new NamedNode("b1");
 
             expect(b1.equals(b2)).to.be.false;
             expect(b1.equals(b3)).to.be.true;
@@ -39,7 +36,7 @@ describe("BlankNode", function () {
         it("should return the stringified nominalValue with prepended _:", function () {
             const b = new BlankNode("b");
             expect(b.toString()).to.equal("_:b");
-        })
+        });
     });
 
     /** @test {BlankNode#toNT} */

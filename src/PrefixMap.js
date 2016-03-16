@@ -151,6 +151,8 @@ export default class PrefixMap {
      *
      * @return {String}
      * If the lookup was successful a CURIE is returned.
+     *
+     * @private
      */
     trySplit(iri, splitIndex) {
         const path = iri.slice(0, splitIndex + 1);
