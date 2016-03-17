@@ -11,10 +11,10 @@ describe("Literal", function () {
             const b  = new BlankNode("l1");
             const n  = new NamedNode("l1");
 
-             expect(l1.equals(l2)).to.be.false;
-             expect(l1.equals(l3)).to.be.true;
-             expect(l1.equals(b)).to.be.false;
-             expect(l1.equals(n)).to.be.false;
+            expect(l1.equals(l2)).to.be.false;
+            expect(l1.equals(l3)).to.be.true;
+            expect(l1.equals(b)).to.be.false;
+            expect(l1.equals(n)).to.be.false;
         });
 
         it("should compare this node to a non-RDFNode value by calling the valueOf method", function () {
