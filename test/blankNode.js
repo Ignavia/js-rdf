@@ -23,7 +23,6 @@ describe("BlankNode", function () {
         });
     });
 
-    /** @test {BlankNode#valueOf} */
     describe("#valueOf", function () {
         it("should return the stringified nominalValue", function () {
             const b = new BlankNode("b");
@@ -31,7 +30,6 @@ describe("BlankNode", function () {
         });
     });
 
-    /** @test {BlankNode#toString} */
     describe("#toString", function () {
         it("should return the stringified nominalValue with prepended _:", function () {
             const b = new BlankNode("b");
@@ -39,7 +37,6 @@ describe("BlankNode", function () {
         });
     });
 
-    /** @test {BlankNode#toNT} */
     describe("#toNT", function () {
         it("should return the N-Triples representation", function () {
             const b = new BlankNode("b");

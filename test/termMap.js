@@ -1,4 +1,4 @@
-    import {expect} from "chai";
+import {expect} from "chai";
 
 import {TermMap} from "../src/rdf.js";
 
@@ -19,6 +19,7 @@ describe("TermMap", function () {
             expect(this.pm.hasIRI("http://example.org/"));
             expect(this.pm.hasIRI("http://foo.de/"));
             expect(this.pm.hasIRI("http://bar.com#"));
+            expect(this.pm.size).to.equal(3);
         });
 
         it("should override previous connections", function () {

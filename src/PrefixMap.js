@@ -28,6 +28,15 @@ export default class PrefixMap {
     }
 
     /**
+     * The number of entries in this PrefixMap.
+     *
+     * @type {Number}
+     */
+    get size() {
+        return this.prefixToPath.size;
+    }
+
+    /**
      * Connects the given prefix and IRI.
      *
      * @param {String} prefix

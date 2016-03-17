@@ -1,3 +1,5 @@
+import {IDGenerator} from "@ignavia/util";
+
 import Graph     from "./Graph.js";
 import Triple    from "./Triple.js";
 import BlankNode from "./BlankNode.js";
@@ -19,9 +21,11 @@ const defaultPrefixes = new PrefixMap([
     ["rdfs", "http://www.w3.org/2000/01/rdf-schema#"],
     ["rdfa", "http://www.w3.org/ns/rdfa#"],
     ["xhv",  "http://www.w3.org/1999/xhtml/vocab#"],
-    ["xml",  "http://www.w3.org/XML/1998/namespace"],
+    ["xml",  "http://www.w3.org/XML/1998/namespace#"],
     ["xsd",  "http://www.w3.org/2001/XMLSchema#"]
 ]);
+
+const idGenerator = new IDGenerator("hfld#");
 
 /**
  * A high level API for working with RDF.
@@ -31,10 +35,18 @@ const defaultPrefixes = new PrefixMap([
 export default class RDFEnvironment extends Profile {
 
     /**
+     * @param {Object} conf
+     * The configuration object.
      *
+     * @param {PrefixMap} [conf.prefixes]
+     * The prefix map to use.
+     *
+     * @param {TermMap} {conf.terms}
+     * The term map to use.
      */
-    constructor() {
-        super({prefixes: defaultPrefixes.clone()});
+    constructor(conf = {}) {
+        super(conf);
+        this.prefixes.addAll(defaultPrefixes);
     }
 
     /**
@@ -82,7 +94,7 @@ export default class RDFEnvironment extends Profile {
      * @see https://www.w3.org/TR/rdf-interfaces/#widl-RDFEnvironment-createBlankNode-BlankNode
      */
     createBlankNode() {
-        return new BlankNode(); // TODO find a name (IDGenerator)
+        return new BlankNode(idGenerator.next());
     }
 
     /**

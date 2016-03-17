@@ -19,6 +19,7 @@ describe("PrefixMap", function () {
             expect(this.pm.hasIRI("http://example.org/"));
             expect(this.pm.hasIRI("http://foo.de/"));
             expect(this.pm.hasIRI("http://bar.com#"));
+            expect(this.pm.size).to.equal(3);
         });
 
         it("should override previous connections", function () {
@@ -111,6 +112,13 @@ describe("PrefixMap", function () {
 
         expect(prefixes).to.have.members(["foo", "ex", "bar"]);
         expect(iris).to.have.members(["http://foo.de/", "http:example.org/", "http://bar.com#"]);
+    });
+
+    describe("clone", function () {
+        const r0 = this.pm.clone();
+        expect(r0).to.not.equal(this.pm);
+        expect(r0.hasPrefix("foo")).to.be.true;
+        expect(r0.hasIRI("http:example.org/")).to.be.true;
     });
 
     after(function () {
