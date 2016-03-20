@@ -19,8 +19,7 @@
     "url": "https://github.com/Ignavia/js-rdf.git"
   },
   "scripts": {
-    "build": "jspm build ./src/rdf.js ./dist/rdf.js --format cjs --skip-source-maps --minify",
-    "coverage": "babel-node node_modules/isparta/bin/isparta cover --report text --report html node_modules/mocha/bin/_mocha -- --reporter dot",
+    "build": "jspm build ./src/rdf.js - @ignavia/util - lodash ./dist/rdf.js --format cjs --skip-source-maps --minify",
     "doc": "esdoc -c esdoc.json",
     "test": "mocha --compilers js:babel-register"
   },
@@ -29,23 +28,27 @@
     "lodash": "^4.6.1"
   },
   "devDependencies": {
-    "babel-cli": "^6.5.1",
+    "babel-plugin-transform-export-extensions": "^6.5.0",
     "babel-preset-es2015": "^6.5.0",
-    "babel-preset-stage-0": "^6.5.0",
     "babel-register": "^6.5.2",
-    "chai": "^3.5.0",
-    "esdoc": "^0.4.4",
-    "isparta": "^4.0.0",
-    "jspm": "^0.17.0-beta.6",
-    "mocha": "^2.4.5"
+    "chai": "^3.5.0"
+  },
+  "babel": {
+    "env": {
+      "development": {
+        "presets": ["es2015"],
+        "plugins": ["transform-export-extensions"]
+      }
+    }
   },
   "jspm": {
     "name": "@ignavia/rdf",
     "dependencies": {
+      "@ignavia/util": "npm:@ignavia/util@^1.1.7",
       "lodash": "npm:lodash@^4.6.1"
     },
     "devDependencies": {
-      "babel-preset-stage-0": "npm:babel-preset-stage-0@^6.5.0",
+      "babel-plugin-transform-export-extensions": "npm:babel-plugin-transform-export-extensions@^6.5.0",
       "plugin-babel": "npm:systemjs-plugin-babel@^0.0.2"
     },
     "peerDependencies": {
@@ -140,20 +143,6 @@
         "ignore": [
           "test.js"
         ]
-      },
-      "npm:lodash@3.10.1": {
-        "format": "cjs",
-        "meta": {
-          "*": {
-            "globals": {
-              "process": "process"
-            }
-          },
-          "*.json": {
-            "format": "json"
-          }
-        },
-        "map": {}
       }
     }
   }

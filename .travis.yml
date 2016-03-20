@@ -1,11 +1,13 @@
 language: node_js
 node_js:
 - '4.1'
-install: # install NPM dependencies
+install: # install NPM dependencies for testing
 - npm install
+- npm install mocha babel-register
 script: # run tests
 - npm run test
 before_deploy: # install JSPM dependencies and create the bundle and the doc
+- npm install esdoc esdoc-es7-plugin jspm@beta
 - jspm config registries.github.auth $JSPM_GITHUB_AUTH_TOKEN
 - jspm install
 - BABEL_ENV=production npm run build
