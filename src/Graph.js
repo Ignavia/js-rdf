@@ -21,6 +21,17 @@ function toPrimitive(v) {
     return v[Symbol.toPrimitive]();
 }
 
+/**
+ * Tests if the given value is a literal.
+ *
+ * @param {*} v
+ * The value to test.
+ *
+ * @return {Boolean}
+ * Whether it is a literal.
+ *
+ * @ignore
+ */
 function isLiteral(v) {
     return v instanceof Literal;
 }
@@ -158,7 +169,6 @@ export default class Graph {
         const l = isLiteral(triple.object);
         const p = toPrimitive(triple.predicate);
         const o = toPrimitive(triple.object);
-        const l = triple.object instanceof Literal;
 
         this.slpo.delete([s, l, p, o], triple);
         this.pos.delete([p, o, s], triple);
@@ -326,6 +336,12 @@ export default class Graph {
         return tortilla(candidates);
     }
 
+    /**
+     * Yields all triples with the given subject and a literal object.
+     *
+     * @param {RDFNode} subject
+     * The subject to get the triples for.
+     */
     literals(subject) {
         const s = toPrimitive(subject);
 
@@ -417,17 +433,6 @@ export default class Graph {
         this.slpo.clear();
         this.pos.clear();
         this.osp.clear();
-    }
-
-    /**
-     * Yields all triples with the given subject and a literal object.
-     *
-     * @param {RDFNode} subject
-     * The subject to get the triple for.
-     */
-    iterLiterals(subject) {
-        const s = toPrimitive(subject);
-        return this.slpo.get([s, true]).values();
     }
 
     /**
