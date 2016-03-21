@@ -25,6 +25,12 @@ const defaultPrefixes = new PrefixMap([
     ["xsd",  "http://www.w3.org/2001/XMLSchema#"]
 ]);
 
+/**
+ * Provides IDs for blank nodes.
+ *
+ * @type {IDGenerator}
+ * @ignore
+ */
 const idGenerator = new IDGenerator("hfld#");
 
 /**

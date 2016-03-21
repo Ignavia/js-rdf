@@ -158,10 +158,11 @@ export default class Graph {
         const l = isLiteral(triple.object);
         const p = toPrimitive(triple.predicate);
         const o = toPrimitive(triple.object);
+        const l = triple.object instanceof Literal;
 
         this.slpo.delete([s, l, p, o], triple);
-        this.pos.delete([p, o, s],     triple);
-        this.osp.delete([o, s, p],     triple);
+        this.pos.delete([p, o, s], triple);
+        this.osp.delete([o, s, p], triple);
 
         return this;
     }
@@ -261,6 +262,8 @@ export default class Graph {
      *
      * @return {Iterable}
      * An Iterable for all matching triples.
+     *
+     * @private
      */
     findMatches(conf) {
         return this.lookUpCandidates(conf).filter(triple => (
@@ -287,6 +290,8 @@ export default class Graph {
      *
      * @return {Iterable}
      * The resulting Iterable.
+     *
+     * @private
      */
     lookUpCandidates({subject, predicate, object} = {}) {
         const s = toPrimitive(subject);
@@ -406,6 +411,26 @@ export default class Graph {
     }
 
     /**
+     * Removes all triples from this graph.
+     */
+    clear() {
+        this.slpo.clear();
+        this.pos.clear();
+        this.osp.clear();
+    }
+
+    /**
+     * Yields all triples with the given subject and a literal object.
+     *
+     * @param {RDFNode} subject
+     * The subject to get the triple for.
+     */
+    iterLiterals(subject) {
+        const s = toPrimitive(subject);
+        return this.slpo.get([s, true]).values();
+    }
+
+    /**
      * Yields the triples in this graph. Their order is arbitrary.
      */
     [Symbol.iterator]() {
@@ -423,5 +448,18 @@ export default class Graph {
      */
     toArray() {
         return [...this];
+    }
+
+    /**
+     * Returns a string representation of this graph.
+     *
+     * @return {String}
+     * A string representing this graph.
+     */
+    toString() {
+        let result = "";
+        for (let triple of this) {
+            result += triple.toString() + "\n";
+        }
     }
 }

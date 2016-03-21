@@ -24,8 +24,7 @@
     "test": "mocha --compilers js:babel-register"
   },
   "dependencies": {
-    "@ignavia/util": "^1.1.7",
-    "lodash": "^4.6.1"
+    "@ignavia/util": "^1.1.7"
   },
   "devDependencies": {
     "babel-plugin-transform-export-extensions": "^6.5.0",
