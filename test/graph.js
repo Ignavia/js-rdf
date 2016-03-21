@@ -4,12 +4,12 @@ chai.use(sinonChai);
 
 import sinon from "sinon";
 
-import {Graph, Triple, BlankNode, NamedNode, Literal} from "../src/rdf.js";
+import {Graph, Triple, BlankNode, NamedNode, Literal, xmlSchemaTypes as xsd} from "../src/rdf.js";
 
 describe("Graph", function () {
     beforeEach(function () {
         this.t0 = new Triple(new BlankNode("b1"), new NamedNode("n1"), new Literal("l1"));
-        this.t1 = new Triple(new NamedNode("b1"), new NamedNode("n1"), new Literal("l1"));
+        this.t1 = new Triple(new NamedNode("b1"), new NamedNode("n1"), new Literal("1", {datatype: xsd.integer}));
         this.t2 = new Triple(new BlankNode("b1"), new NamedNode("n1"), new Literal("l1"));
         this.t3 = new Triple(new BlankNode("b1"), new NamedNode("n2"), new NamedNode("n1"));
         this.g0 = new Graph([this.t0, this.t1, this.t2, this.t3]);
@@ -31,6 +31,18 @@ describe("Graph", function () {
             this.g0.add(this.t4);
             expect(this.g0.has(this.t4)).to.be.true;
             expect(this.g0.length).to.equal(4);
+        });
+
+        it("should fire an event", function () {
+            const spy = sinon.spy();
+            this.g0.addListener(spy, "add");
+            this.g0.add(this.t4);
+
+            expect(spy).to.have.been.calledOnce;
+            const e = spy.args[0][0];
+            expect(e.source).to.equal(this.g0);
+            expect(e.type).to.equal("add");
+            expect(e.data).to.equal(this.t4);
         });
     });
 
@@ -56,19 +68,60 @@ describe("Graph", function () {
             expect(this.g0.has(this.t2)).to.be.false;
             expect(this.g0.length).to.equal(2);
         });
+
+        it("should fire an event", function () {
+            const spy = sinon.spy();
+            this.g0.addListener(spy, "remove");
+            this.g0.remove(this.t2);
+
+            expect(spy).to.have.been.calledOnce;
+            const e = spy.args[0][0];
+            expect(e.source).to.equal(this.g0);
+            expect(e.type).to.equal("remove");
+            expect(e.data).to.equal(this.t2);
+        });
     });
 
     describe("#removeMatches", function () {
-        it("should remove only triple with matching subjects", function () {
-            // TODO
+        it("should remove only triple with matching subjects (string)", function () {
+            this.g0.removeMatches({subject: "b1"});
+            expect(this.g0.length).to.equal(0);
         });
 
-        it("should remove only triples with matching predicates", function () {
-            // TODO
+        it("should remove only triple with matching subjects (RDFNode)", function () {
+            this.g0.removeMatches({subject: new BlankNode("b1")});
+            expect(r0.has(this.t1)).to.be.true;
+            expect(r0.length).to.equal(1);
         });
 
-        it("should remove only triples with matching objects", function () {
-            // TODO
+        it("should remove only triples with matching predicates (string)", function () {
+            const r0 = this.g0.removeMatches({predicate: "n1"});
+            expect(r0.has(this.t3)).to.be.true;
+            expect(r0.length).to.equal(1);
+        });
+
+        it("should remove only triples with matching predicates (RDFNode)", function () {
+            const r1 = this.g0.removeMatches({predicate: new NamedNode("n1")});
+            expect(r0.has(this.t1)).to.be.true;
+            expect(r0.length).to.equal(1);
+        });
+
+        it("should remove only triples with matching objects (string)", function () {
+            const r0 = this.g0.removeMatches({object: "l1"});
+            expect(r0.has(this.t2)).to.be.true;
+            expect(r0.length).to.equal(2);
+        });
+
+        it("should remove only triples with matching objects (integer)", function () {
+            const r2 = this.g0.removeMatches({object: 1});
+            expect(r0.has(this.t0)).to.be.true;
+            expect(r0.length).to.equal(2);
+        });
+
+        it("should remove only triples with matching objects (RDFNode)", function () {
+            const r1 = this.g0.removeMatches({object: new NamedNode("n1")});
+            expect(r0.has(this.t0)).to.be.true;
+            expect(r0.length).to.equal(2);
         });
     });
 
@@ -91,15 +144,41 @@ describe("Graph", function () {
 
     describe("#match", function () {
         it("should include only triple with matching subjects", function () {
-            // TODO
+            const r0 = this.g0.match({subject: "b1"});
+            expect(r0.has(this.t0)).to.be.true;
+            expect(r0.has(this.t1)).to.be.true;
+            expect(r0.length).to.equal(3);
+
+            const r1 = this.g0.match({subject: new BlankNode("b1")});
+            expect(r0.has(this.t0)).to.be.true;
+            expect(r0.has(this.t1)).to.be.false;
+            expect(r0.length).to.equal(2);
         });
 
         it("should include only triples with matching predicates", function () {
-            // TODO
+            const r0 = this.g0.match({predicate: "n1"});
+            expect(r0.has(this.t0)).to.be.true;
+            expect(r0.has(this.t1)).to.be.true;
+            expect(r0.length).to.equal(2);
+
+            const r1 = this.g0.match({predicate: new NamedNode("n1")});
+            expect(r0.has(this.t0)).to.be.true;
+            expect(r0.has(this.t1)).to.be.true;
+            expect(r0.length).to.equal(2);
         });
 
         it("should include only triples with matching objects", function () {
-            // TODO
+            const r0 = this.g0.match({object: "l1"});
+            expect(r0.has(this.t0)).to.be.true;
+            expect(r0.length).to.equal(1);
+
+            const r1 = this.g0.match({object: new NamedNode("n1")});
+            expect(r0.has(this.t3)).to.be.true;
+            expect(r0.length).to.equal(1);
+
+            const r2 = this.g0.match({object: 1});
+            expect(r0.has(this.t1)).to.be.true;
+            expect(r0.length).to.equal(1);
         });
     });
 
@@ -144,6 +223,18 @@ describe("Graph", function () {
         it("should remove all triples from the graph", function () {
             this.g0.clear();
             expect(g0.length).to.equal(0);
+        });
+
+        it("should fire an event", function () {
+            const spy = sinon.spy();
+            this.g0.addListener(spy, "clear");
+            this.g0.clear;
+
+            expect(spy).to.have.been.calledOnce;
+            const e = spy.args[0][0];
+            expect(e.source).to.equal(this.g0);
+            expect(e.type).to.equal("clear");
+            expect(e.data).to.have.member([this.t0, this.t1, this.t3]);
         });
     });
 

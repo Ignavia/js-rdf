@@ -1,4 +1,4 @@
-import {GumpMap, tortilla} from "@ignavia/util";
+import {EventManager, GumpMap, observableExtendedMixin, tortilla} from "@ignavia/util";
 
 import Literal from "./Literal.js";
 
@@ -75,6 +75,14 @@ export default class Graph {
          */
         this.osp = new GumpMap();
 
+        /**
+         * Manages events and listeners.
+         *
+         * @type {EventManager}
+         * @private
+         */
+        this.eventManager = new EventManager();
+
         // Add initial values
         for (let triple of initialValues) {
             this.add(triple);
@@ -111,6 +119,12 @@ export default class Graph {
             this.slpo.add([s, l, p, o], triple);
             this.pos.add([p, o, s], triple);
             this.osp.add([o, s, p], triple);
+
+            this.fireEvent(EventManager.makeEvent({
+                source: this,
+                type:   "add",
+                data:   triple
+            }));
         }
 
         return this;
@@ -165,14 +179,22 @@ export default class Graph {
      * @see https://www.w3.org/TR/rdf-interfaces/#widl-Graph-remove-Graph-Triple-triple
      */
     remove(triple) {
-        const s = toPrimitive(triple.subject);
-        const l = isLiteral(triple.object);
-        const p = toPrimitive(triple.predicate);
-        const o = toPrimitive(triple.object);
+        if (this.has(triple)) {
+            const s = toPrimitive(triple.subject);
+            const l = isLiteral(triple.object);
+            const p = toPrimitive(triple.predicate);
+            const o = toPrimitive(triple.object);
 
-        this.slpo.delete([s, l, p, o], triple);
-        this.pos.delete([p, o, s], triple);
-        this.osp.delete([o, s, p], triple);
+            this.slpo.delete([s, l, p, o], triple);
+            this.pos.delete([p, o, s], triple);
+            this.osp.delete([o, s, p], triple);
+
+            this.fireEvent(EventManager.fireEvent({
+                source: this,
+                type:   "remove",
+                data:   triple
+            }));
+        }
 
         return this;
     }
@@ -430,9 +452,19 @@ export default class Graph {
      * Removes all triples from this graph.
      */
     clear() {
-        this.slpo.clear();
-        this.pos.clear();
-        this.osp.clear();
+        if (this.length > 0) {
+            const deleted = [...this];
+
+            this.slpo.clear();
+            this.pos.clear();
+            this.osp.clear();
+
+            this.fireEvent(EventManager.makeEvent({
+                source: this,
+                type:   "clear",
+                data:   deleted
+            }));
+        }
     }
 
     /**
@@ -468,3 +500,6 @@ export default class Graph {
         }
     }
 }
+
+// Make graph observable
+Object.assign(Graph.prototype, observableExtendendedMixin);
