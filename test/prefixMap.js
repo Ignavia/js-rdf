@@ -79,7 +79,7 @@ describe("PrefixMap", function () {
         it("should not override entries by default", function () {
             this.pm.addAll([
                 ["foo", "https://foo.de/"],
-                ["emp", "http:example.org/"]
+                ["emp", "http://example.org/"]
             ]);
             expect(this.pm.hasIRI("https://foo.de/")).to.be.false;
             expect(this.pm.hasPrefix("emp")).to.be.false;
@@ -88,7 +88,7 @@ describe("PrefixMap", function () {
         it("should override entries if the corresponding parameter is set", function () {
             this.pm.addAll([
                 ["foo", "https://foo.de/"],
-                ["emp", "http:example.org/"]
+                ["emp", "http://example.org/"]
             ]);
             expect(this.pm.hasIRI("https://foo.de/")).to.be.true;
             expect(this.pm.hasPrefix("emp")).to.be.true;
@@ -96,29 +96,37 @@ describe("PrefixMap", function () {
     });
 
     describe("prefixes", function () {
-        const r0 = [...this.pm.prefixes()];
-        expect(r0).to.have.members(["foo", "ex", "bar"]);
+        it("should yield the prefixes in the map", function () {
+            const r0 = [...this.pm.prefixes()];
+            expect(r0).to.have.members(["foo", "ex", "bar"]);
+        });
     });
 
     describe("iris", function () {
-        const r0 = [...this.pm.iris()];
-        expect(r0).to.have.members(["http://foo.de/", "http:example.org/", "http://bar.com#"]);
+        it("should yield the IRIs in the map", function () {
+            const r0 = [...this.pm.iris()];
+            expect(r0).to.have.members(["http://foo.de/", "http://example.org/", "http://bar.com#"]);
+        });
     });
 
     describe("entries", function () {
-        const entries  = [...this.pm.entries()];
-        const prefixes = entries.map(e => e[0]);
-        const iris     = entries.map(e => e[1]);
+        it("should yield the entries in the map", function () {
+            const entries  = [...this.pm.entries()];
+            const prefixes = entries.map(e => e[0]);
+            const iris     = entries.map(e => e[1]);
 
-        expect(prefixes).to.have.members(["foo", "ex", "bar"]);
-        expect(iris).to.have.members(["http://foo.de/", "http:example.org/", "http://bar.com#"]);
+            expect(prefixes).to.have.members(["foo", "ex", "bar"]);
+            expect(iris).to.have.members(["http://foo.de/", "http://example.org/", "http://bar.com#"]);
+        });
     });
 
     describe("clone", function () {
-        const r0 = this.pm.clone();
-        expect(r0).to.not.equal(this.pm);
-        expect(r0.hasPrefix("foo")).to.be.true;
-        expect(r0.hasIRI("http:example.org/")).to.be.true;
+        it("should return a copy of this map", function () {
+            const r0 = this.pm.clone();
+            expect(r0).to.not.equal(this.pm);
+            expect(r0.hasPrefix("foo")).to.be.true;
+            expect(r0.hasIRI("http://example.org/")).to.be.true;
+        });
     });
 
     after(function () {

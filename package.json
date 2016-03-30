@@ -30,13 +30,19 @@
     "babel-plugin-transform-export-extensions": "^6.5.0",
     "babel-preset-es2015": "^6.5.0",
     "babel-register": "^6.5.2",
-    "chai": "^3.5.0"
+    "chai": "^3.5.0",
+    "sinon": "^1.17.3",
+    "sinon-chai": "^2.8.0"
   },
   "babel": {
     "env": {
       "development": {
-        "presets": ["es2015"],
-        "plugins": ["transform-export-extensions"]
+        "presets": [
+          "es2015"
+        ],
+        "plugins": [
+          "transform-export-extensions"
+        ]
       }
     }
   },
@@ -63,29 +69,6 @@
       "util": "github:jspm/nodelibs-util@^0.2.0-alpha"
     },
     "overrides": {
-      "npm:babel-runtime@5.8.35": {
-        "main": "index",
-        "dependencies": {},
-        "optionalDependencies": {
-          "core-js": "^1.2.0"
-        },
-        "format": "cjs",
-        "meta": {
-          "*": {
-            "globals": {
-              "process": "process"
-            }
-          },
-          "*.json": {
-            "format": "json"
-          }
-        },
-        "map": {
-          "./core-js/object.js": "./core-js/object/index.js",
-          "./regenerator.js": "./regenerator/index.js",
-          "babel-runtime": "."
-        }
-      },
       "npm:core-js@1.2.6": {
         "format": "cjs",
         "meta": {

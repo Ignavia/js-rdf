@@ -3,8 +3,8 @@ import {EventManager, GumpMap, observableExtendedMixin, tortilla} from "@ignavia
 import Literal from "./Literal.js";
 
 /**
- * Turns the given value into a primitive value using the [Symbol.iterator]
- * method.
+ * Turns the given value into a primitive value using the [Symbol.toPrimitive]
+ * method if it exists.
  *
  * @param {*} v
  * The value to convert.
@@ -15,7 +15,7 @@ import Literal from "./Literal.js";
  * @ignore
  */
 function toPrimitive(v) {
-    if (v === undefined || v === null) {
+    if (v === undefined || v === null || typeof v[Symbol.toPrimitive] !== "function") {
         return v;
     }
     return v[Symbol.toPrimitive]();
@@ -46,10 +46,10 @@ export default class Graph {
     // TODO listeners
 
     /**
-     * @param {Array} initialValues
+     * @param {Array} [initialValues=[]]
      * An array with all triples to add initially.
      */
-    constructor(initialValues) {
+    constructor(initialValues = []) {
 
         /**
          * Maps from subjects to isLiteral to predicates to objects to triples.
@@ -162,7 +162,7 @@ export default class Graph {
         const o = toPrimitive(triple.object);
         const s = toPrimitive(triple.subject);
 
-        return !tortilla(this.pos.get([p, o, s]))
+        return !this.pos.has([p, o, s]) || !tortilla(this.pos.get([p, o, s]))
             .filter(t => t.equals(triple))
             .isEmpty();
     }
@@ -189,7 +189,7 @@ export default class Graph {
             this.pos.delete([p, o, s], triple);
             this.osp.delete([o, s, p], triple);
 
-            this.fireEvent(EventManager.fireEvent({
+            this.fireEvent(EventManager.makeEvent({
                 source: this,
                 type:   "remove",
                 data:   triple
@@ -498,8 +498,9 @@ export default class Graph {
         for (let triple of this) {
             result += triple.toString() + "\n";
         }
+        return result;
     }
 }
 
 // Make graph observable
-Object.assign(Graph.prototype, observableExtendendedMixin);
+Object.assign(Graph.prototype, observableExtendedMixin);

@@ -8,10 +8,10 @@ import {Tolkien1To1Map} from "@ignavia/util";
 export default class PrefixMap {
 
     /**
-     * @param {Array} initialValue
+     * @param {Array} [initialValue=[]]
      * An array with [term, iri] entries.
      */
-    constructor(initialValues) {
+    constructor(initialValues = []) {
 
         /**
          * Maps from prefixes to IRIs and back.
@@ -108,7 +108,7 @@ export default class PrefixMap {
      */
     resolve(curie) {
         const [prefix, name] = curie.split(":");
-        const path = this.get(prefix);
+        const path = this.prefixToPath.convertXToY(prefix);
         if (path) {
             return path + name;
         }

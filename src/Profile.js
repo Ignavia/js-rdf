@@ -53,7 +53,7 @@ export default class Profile {
         if (toResolve.includes(":")) {
             return this.prefixes.resolve(toResolve);
         } else {
-            return this.terms.resove(toResolve);
+            return this.terms.resolve(toResolve);
         }
     }
 
@@ -137,10 +137,10 @@ export default class Profile {
         this.prefixes.addAll(profile.prefixes, override);
         this.terms.addAll(profile.terms, override);
     }
-    
+
     /**
      * Returns a copy of this Profile.
-     * 
+     *
      * @return {Profile}
      * A copy of this Profile.
      */

@@ -8,10 +8,10 @@ import {Tolkien1To1Map} from "@ignavia/util";
 export default class TermMap {
 
     /**
-     * @param {Array} initialValue
+     * @param {Array} [initialValue=[]]
      * An array with [term, iri] entries.
      */
-    constructor(initialValues) {
+    constructor(initialValues = []) {
 
         /**
          * Maps from terms to IRIs and back.

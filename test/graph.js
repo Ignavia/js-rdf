@@ -222,7 +222,7 @@ describe("Graph", function () {
     describe("#clear", function () {
         it("should remove all triples from the graph", function () {
             this.g0.clear();
-            expect(g0.length).to.equal(0);
+            expect(this.g0.length).to.equal(0);
         });
 
         it("should fire an event", function () {

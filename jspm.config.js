@@ -15,6 +15,9 @@ SystemJS.config({
                 }
             }
         }
+    },
+    map: {
+        "": "npm:@ignavia/util@1.1.7"
     }
 });
 
@@ -25,8 +28,7 @@ SystemJS.config({
         "github:*/*.json"
     ],
     map: {
-        "": "npm:@ignavia/util@1.1.7",
-        "@ignavia/util": "npm:@ignavia/util@1.1.7",
+        "@ignavia/util": "npm:@ignavia/util@1.2.1",
         "babel-plugin-transform-export-extensions": "npm:babel-plugin-transform-export-extensions@6.5.0",
         "buffer": "github:jspm/nodelibs-buffer@0.2.0-alpha",
         "core-js": "npm:core-js@1.2.6",
@@ -44,7 +46,7 @@ SystemJS.config({
     packages: {
         "github:jspm/nodelibs-buffer@0.2.0-alpha": {
             "map": {
-                "buffer-browserify": "npm:buffer@4.5.0"
+                "buffer-browserify": "npm:buffer@4.5.1"
             }
         },
         "github:jspm/nodelibs-stream@0.2.0-alpha": {
@@ -52,20 +54,30 @@ SystemJS.config({
                 "stream-browserify": "npm:stream-browserify@2.0.1"
             }
         },
+        "npm:@ignavia/util@1.2.1": {
+            "map": {
+                "lodash": "npm:lodash@4.6.1"
+            }
+        },
         "npm:babel-plugin-syntax-export-extensions@6.5.0": {
             "map": {
-                "babel-runtime": "npm:babel-runtime@5.8.35"
+                "babel-runtime": "npm:babel-runtime@5.8.38"
             }
         },
         "npm:babel-plugin-transform-export-extensions@6.5.0": {
             "map": {
                 "babel-plugin-syntax-export-extensions": "npm:babel-plugin-syntax-export-extensions@6.5.0",
-                "babel-runtime": "npm:babel-runtime@5.8.35"
+                "babel-runtime": "npm:babel-runtime@5.8.38"
             }
         },
-        "npm:buffer@4.5.0": {
+        "npm:babel-runtime@5.8.38": {
             "map": {
-                "base64-js": "npm:base64-js@1.1.1",
+                "core-js": "npm:core-js@1.2.6"
+            }
+        },
+        "npm:buffer@4.5.1": {
+            "map": {
+                "base64-js": "npm:base64-js@1.1.2",
                 "ieee754": "npm:ieee754@1.1.6",
                 "isarray": "npm:isarray@1.0.0"
             }

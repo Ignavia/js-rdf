@@ -2,6 +2,25 @@ import RDFNode                 from "./RDFNode.js";
 import {xmlSchemaTypes as xsd} from "./xmlSchemaTypes.js";
 
 /**
+ * Turns the given value into a primitive value using the [Symbol.toPrimitive]
+ * method if it exists.
+ *
+ * @param {*} v
+ * The value to convert.
+ *
+ * @return {*}
+ * The resulting primitive.
+ *
+ * @ignore
+ */
+function toPrimitive(v) {
+    if (v === undefined || v === null || typeof v[Symbol.toPrimitive] !== "function") {
+        return v;
+    }
+    return v[Symbol.toPrimitive]();
+}
+
+/**
  * Lists how to convert a string to a specific datatype.
  *
  * @ignore
@@ -78,7 +97,7 @@ export default class Literal extends RDFNode {
                    this.language      === toCompare.language      &&
                    this.equalDatatypes(toCompare);
         }
-        return this[Symbol.toPrimitive]() === toCompare[Symbol.toPrimitive]();
+        return toPrimitive(this) === toPrimitive(toCompare);
     }
 
     /**
@@ -113,7 +132,7 @@ export default class Literal extends RDFNode {
     toString() {
         return `${this.nominalValue}`;
     }
-    
+
     /**
      * @override
      */
@@ -121,7 +140,7 @@ export default class Literal extends RDFNode {
         if (hint === "string") {
             return this.toString();
         }
-        return this.valueOf().valueOf(); 
+        return this.valueOf().valueOf();
     }
 
     /**
