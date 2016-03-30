@@ -16,7 +16,7 @@ describe("PrefixMap", function () {
             ["bar", "http://bar.com#"]
         ]);
 
-        this.p = new Profile(prefixes, terms);
+        this.p = new Profile({prefixes, terms});
     });
 
     describe("#resolve", function () {

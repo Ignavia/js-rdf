@@ -14,10 +14,16 @@ import {xmlSchemaTypes as xsd} from "./xmlSchemaTypes.js";
  * @ignore
  */
 function toPrimitive(v) {
-    if (v === undefined || v === null || typeof v[Symbol.toPrimitive] !== "function") {
+    if (v === undefined || v === null) {
         return v;
+    } else if (typeof v[Symbol.toPrimitive] === "function") {
+        return v[Symbol.toPrimitive]("number");
+    } else if (typeof v.valueOf === "function") {
+        return v.valueOf();
+    } else if (typeof v.toString === "function") {
+        return v.toString();
     }
-    return v[Symbol.toPrimitive]();
+    return v;
 }
 
 /**
@@ -97,6 +103,7 @@ export default class Literal extends RDFNode {
                    this.language      === toCompare.language      &&
                    this.equalDatatypes(toCompare);
         }
+        console.log(this, toCompare, toPrimitive(this), toPrimitive(toCompare), toPrimitive(this) === toPrimitive(toCompare));
         return toPrimitive(this) === toPrimitive(toCompare);
     }
 
@@ -136,11 +143,11 @@ export default class Literal extends RDFNode {
     /**
      * @override
      */
-    [Symbol.toPrimitive](hint) {
+    [Symbol.toPrimitive](hint = "default") {
         if (hint === "string") {
             return this.toString();
         }
-        return this.valueOf().valueOf();
+        return toPrimitive(this.valueOf());
     }
 
     /**

@@ -118,7 +118,7 @@ export default class TermMap {
      */
     resolve(term) {
         if (this.termToIRI.hasX(term)) {
-            return this.termToIRI.convertXToY(term);
+            return this.termToIRI.convertXToY(term)[0];
         } else if (this.default) {
             return this.default + term;
         } else {
@@ -140,7 +140,7 @@ export default class TermMap {
      */
     shrink(iri) {
         if (this.termToIRI.hasY(iri)) {
-            return this.termToIRI.convertYToX(iri);
+            return this.termToIRI.convertYToX(iri)[0];
         } else {
             return iri;
         }

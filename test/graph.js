@@ -127,7 +127,7 @@ describe("Graph", function () {
 
     describe("#merge", function () {
         it("should return a new graph containing the triples from both graphs", function () {
-            const r0 = this.g0.merge(g2);
+            const r0 = this.g0.merge(this.g1);
 
             expect(r0.has(this.t0)).to.be.true;
             expect(r0.has(this.t4)).to.be.true;
@@ -135,10 +135,10 @@ describe("Graph", function () {
         });
 
         it("should leave the original graphs unchanged", function () {
-            this.g0.merge(g2);
+            this.g0.merge(this.g1);
 
-            expect(g0.length).to.equal(3);
-            expect(g1.length).to.equal(1);
+            expect(this.g0.length).to.equal(3);
+            expect(this.g1.length).to.equal(1);
         });
     });
 
@@ -228,13 +228,13 @@ describe("Graph", function () {
         it("should fire an event", function () {
             const spy = sinon.spy();
             this.g0.addListener(spy, "clear");
-            this.g0.clear;
+            this.g0.clear();
 
             expect(spy).to.have.been.calledOnce;
             const e = spy.args[0][0];
             expect(e.source).to.equal(this.g0);
             expect(e.type).to.equal("clear");
-            expect(e.data).to.have.member([this.t0, this.t1, this.t3]);
+            expect(e.data).to.have.members([this.t0, this.t1, this.t3]);
         });
     });
 

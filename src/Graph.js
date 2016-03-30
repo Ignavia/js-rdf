@@ -15,10 +15,16 @@ import Literal from "./Literal.js";
  * @ignore
  */
 function toPrimitive(v) {
-    if (v === undefined || v === null || typeof v[Symbol.toPrimitive] !== "function") {
+    if (v === undefined || v === null) {
         return v;
+    } else if (typeof v[Symbol.toPrimitive] === "function") {
+        return v[Symbol.toPrimitive]("number");
+    } else if (typeof v.valueOf === "function") {
+        return v.valueOf();
+    } else if (typeof v.toString === "function") {
+        return v.toString();
     }
-    return v[Symbol.toPrimitive]();
+    return v;
 }
 
 /**
@@ -162,7 +168,7 @@ export default class Graph {
         const o = toPrimitive(triple.object);
         const s = toPrimitive(triple.subject);
 
-        return !this.pos.has([p, o, s]) || !tortilla(this.pos.get([p, o, s]))
+        return !tortilla(this.pos.get([p, o, s]))
             .filter(t => t.equals(triple))
             .isEmpty();
     }

@@ -82,7 +82,7 @@ describe("TermMap", function () {
             this.tm.addAll([
                 ["foo", "https://foo.de/"],
                 ["emp", "http://example.org/"]
-            ]);
+            ], true);
             expect(this.tm.hasIRI("https://foo.de/")).to.be.true;
             expect(this.tm.hasTerm("emp")).to.be.true;
         });

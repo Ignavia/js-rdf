@@ -108,7 +108,7 @@ export default class PrefixMap {
      */
     resolve(curie) {
         const [prefix, name] = curie.split(":");
-        const path = this.prefixToPath.convertXToY(prefix);
+        const path = this.prefixToPath.convertXToY(prefix)[0];
         if (path) {
             return path + name;
         }
@@ -168,7 +168,7 @@ export default class PrefixMap {
         const name = iri.slice(splitIndex + 1);
 
         if (this.prefixToPath.hasY(iri)) {
-            const prefix = this.prefixToPath.convertYToX(path);
+            const prefix = this.prefixToPath.convertYToX(path)[0];
             return `${prefix}:${name}`;
         }
     }

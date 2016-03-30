@@ -89,7 +89,7 @@ describe("PrefixMap", function () {
             this.pm.addAll([
                 ["foo", "https://foo.de/"],
                 ["emp", "http://example.org/"]
-            ]);
+            ], true);
             expect(this.pm.hasIRI("https://foo.de/")).to.be.true;
             expect(this.pm.hasPrefix("emp")).to.be.true;
         });
