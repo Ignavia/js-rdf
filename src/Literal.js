@@ -101,26 +101,9 @@ export default class Literal extends RDFNode {
             return this.interfaceName === toCompare.interfaceName &&
                    this.nominalValue  === toCompare.nominalValue  &&
                    this.language      === toCompare.language      &&
-                   this.equalDatatypes(toCompare);
+                   this.datatype      === toCompare.datatype;
         }
-        console.log(this, toCompare, toPrimitive(this), toPrimitive(toCompare), toPrimitive(this) === toPrimitive(toCompare));
         return toPrimitive(this) === toPrimitive(toCompare);
-    }
-
-    /**
-     * Tests if the given literal has the same datatype as this one.
-     *
-     * @param {Literal} toCompare
-     * The literal to compare to this one.
-     *
-     * @return {Boolean}
-     * If the two literals have the dame datatypes.
-     *
-     * @private
-     */
-    equalDatatypes(toCompare) {
-        return (this.datatype === null && toCompare.datatype === null) ||
-               (this.datatype.equals(toCompare.datatype));
     }
 
     /**

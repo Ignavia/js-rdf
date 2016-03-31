@@ -164,13 +164,24 @@ export default class Graph {
      * Whether the triple exists already.
      */
     has(triple) {
+        return !this.get(triple).isEmpty();
+    }
+
+    /**
+     * Returns an iterable for all matching triples in this graph.
+     *
+     * @param {Triple} triple
+     * The triple to test.
+     *
+     * @return {TortillaWrapper}
+     * An iterable for all matching triples.
+     */
+    get(triple) {
         const p = toPrimitive(triple.predicate);
         const o = toPrimitive(triple.object);
         const s = toPrimitive(triple.subject);
 
-        return !tortilla(this.pos.get([p, o, s]))
-            .filter(t => t.equals(triple))
-            .isEmpty();
+        return tortilla(this.pos.get([p, o, s])).filter(t => t.equals(triple));
     }
 
     /**
@@ -185,15 +196,19 @@ export default class Graph {
      * @see https://www.w3.org/TR/rdf-interfaces/#widl-Graph-remove-Graph-Triple-triple
      */
     remove(triple) {
-        if (this.has(triple)) {
-            const s = toPrimitive(triple.subject);
-            const l = isLiteral(triple.object);
-            const p = toPrimitive(triple.predicate);
-            const o = toPrimitive(triple.object);
+        const matching = this.get(triple);
 
-            this.slpo.delete([s, l, p, o], triple);
-            this.pos.delete([p, o, s], triple);
-            this.osp.delete([o, s, p], triple);
+        if (!matching.isEmpty()) {
+            for (let triple of matching) {
+                const s = toPrimitive(triple.subject);
+                const l = isLiteral(triple.object);
+                const p = toPrimitive(triple.predicate);
+                const o = toPrimitive(triple.object);
+
+                this.slpo.delete([s, l, p, o], triple);
+                this.pos.delete([p, o, s], triple);
+                this.osp.delete([o, s, p], triple);
+            }
 
             this.fireEvent(EventManager.makeEvent({
                 source: this,
@@ -305,9 +320,9 @@ export default class Graph {
      */
     findMatches(conf) {
         return this.lookUpCandidates(conf).filter(triple => (
-            (!subject   || triple.subject.equals(subject))     &&
-            (!predicate || triple.predicate.equals(predicate)) &&
-            (!object    || triple.object.equals(object))
+            (!conf.subject   || triple.subject.equals(conf.subject))     &&
+            (!conf.predicate || triple.predicate.equals(conf.predicate)) &&
+            (!conf.object    || triple.object.equals(conf.object))
         ));
     }
 
@@ -352,13 +367,13 @@ export default class Graph {
         } else if (object && subject) {
             candidates = this.osp.get([o, s]).values();
         } else if (subject) {
-            candidates = this.spo.get(s).values();
+            candidates = this.slpo.get(s).values();
         } else if (predicate) {
             candidates = this.pos.get(p).values();
         } else if (object) {
             candidates = this.osp.get(o).values();
         } else {
-            candidates = this.spo.values();
+            candidates = this.slpo.values();
         }
 
         return tortilla(candidates);
@@ -373,7 +388,7 @@ export default class Graph {
     literals(subject) {
         const s = toPrimitive(subject);
 
-        return tortilla(this.slpo.get(s, true)).filter(
+        return tortilla(this.slpo.get([s, true]).values()).filter(
             triple => triple.subject.equals(subject)
         );
     }
