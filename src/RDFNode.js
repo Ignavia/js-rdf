@@ -1,5 +1,3 @@
-import _ from "lodash";
-
 /**
  * Defines an interface for RDFNodes.
  *

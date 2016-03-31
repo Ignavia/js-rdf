@@ -19,7 +19,7 @@
     "url": "https://github.com/Ignavia/js-rdf.git"
   },
   "scripts": {
-    "build": "jspm build ./src/rdf.js - @ignavia/util - lodash ./dist/rdf.js --format cjs --skip-source-maps --minify",
+    "build": "jspm build ./src/rdf.js - @ignavia/util ./dist/rdf.js --format cjs --skip-source-maps --minify",
     "doc": "esdoc -c esdoc.json",
     "test": "mocha --compilers js:babel-register"
   },
@@ -49,8 +49,7 @@
   "jspm": {
     "name": "@ignavia/rdf",
     "dependencies": {
-      "@ignavia/util": "npm:@ignavia/util@^1.1.7",
-      "lodash": "npm:lodash@^4.6.1"
+      "@ignavia/util": "npm:@ignavia/util@^1.1.7"
     },
     "devDependencies": {
       "babel-plugin-transform-export-extensions": "npm:babel-plugin-transform-export-extensions@^6.5.0",
@@ -69,6 +68,13 @@
       "util": "github:jspm/nodelibs-util@^0.2.0-alpha"
     },
     "overrides": {
+      "npm:babel-runtime@5.8.38": {
+        "main": false,
+        "dependencies": {},
+        "optionalDependencies": {
+          "core-js": "^1.2.0"
+        }
+      },
       "npm:core-js@1.2.6": {
         "format": "cjs",
         "meta": {
