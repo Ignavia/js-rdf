@@ -75,7 +75,7 @@ export default class Literal extends RDFNode {
      * @param {String} [options.datatype=null]
      * The datatype of this literal.
      */
-    constructor(value, {language = null, datatype = null} = {}) {
+    constructor(value, {language = null, datatype = null} = {}) { // TODO: should this be set to null or undefined?
         super("Literal", value);
 
         /**

@@ -2,7 +2,7 @@ import {expect} from "chai";
 
 import {Graph, Triple, BlankNode, NamedNode, Literal, xmlSchemaTypes as xsd, TurtleWriter} from "../src/rdf.js";
 
-describe("Graph", function () {
+describe("TurtleWriter", function () {
     beforeEach(function () {
         const t0 = new Triple(new BlankNode("b1"), new NamedNode("n1"), new Literal("l1"));
         const t1 = new Triple(new NamedNode("b1"), new NamedNode("n1"), new Literal("1", {datatype: xsd.integer}));

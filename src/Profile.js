@@ -85,7 +85,6 @@ export default class Profile {
         this.prefixes.set(prefix, iri);
     }
 
-
     /**
      * This method sets the default vocabulary for use when resolving unknown
      * terms.
