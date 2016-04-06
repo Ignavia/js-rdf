@@ -8,3 +8,5 @@ export Profile          from "./Profile.js";
 export PrefixMap        from "./PrefixMap.js";
 export TermMap          from "./TermMap.js";
 export {xmlSchemaTypes} from "./xmlSchemaTypes.js";
+export TurtleReader     from "./TurtleReader.js";
+export TurtleWriter     from "./Turtlewriter.js";

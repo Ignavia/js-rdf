@@ -175,6 +175,8 @@ export default class Graph {
      *
      * @return {TortillaWrapper}
      * An iterable for all matching triples.
+     *
+     * @private
      */
     get(triple) {
         const p = toPrimitive(triple.predicate);
