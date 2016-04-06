@@ -65,12 +65,12 @@ describe("Literal", function () {
             expect(l1.toNT()).to.equal(`"l1"`);
 
             const l2 = new Literal("l2", {language: "de"});
-            expect(l2.toNT()).to.equal(`"l2@de"`);
+            expect(l2.toNT()).to.equal(`"l2"@de`);
 
             const l3 = new Literal("l3", {
                 datatype: new NamedNode(xsd.integer)
             });
-            expect(l3.toNT()).to.equal(`"l3^^http://www.w3.org/2001/XMLSchema#integer"`);
+            expect(l3.toNT()).to.equal(`"l3"^^<http://www.w3.org/2001/XMLSchema#integer>`);
         });
     });
 });

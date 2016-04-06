@@ -75,7 +75,7 @@ export default class Literal extends RDFNode {
      * @param {String} [options.datatype=null]
      * The datatype of this literal.
      */
-    constructor(value, {language = null, datatype = null} = {}) { // TODO: should this be set to null or undefined?
+    constructor(value, {language = null, datatype = null} = {}) {
         super("Literal", value);
 
         /**
@@ -138,9 +138,9 @@ export default class Literal extends RDFNode {
      */
     toNT() {
         if (this.language !== null) {
-            return `"${this.nominalValue}@${this.language}"`;
+            return `"${this.nominalValue}"@${this.language}`;
         } else if (this.datatype !== null) {
-            return `"${this.nominalValue}^^${this.datatype}"`;
+            return `"${this.nominalValue}"^^<${this.datatype}>`;
         } else {
             return `"${this.nominalValue}"`;
         }

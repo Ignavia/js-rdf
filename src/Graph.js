@@ -519,7 +519,7 @@ export default class Graph {
     toString() {
         let result = "";
         for (let triple of this) {
-            result += triple.toString() + "\n";
+            result += triple.toString() + " .\n";
         }
         return result;
     }

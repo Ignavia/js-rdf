@@ -15,13 +15,14 @@ export default class TurtleReader {
 
     parseWord(word, {allowBlank = true, allowNamed = true, allowLiteral = true} = {}) {
         if (allowBlank && n3Util.isBlank(word)) {
+            word = word.replace(/^_:b[0-9]+_/, "");
             return new BlankNode(word);
         } else if (allowNamed && n3Util.isIRI(word)) {
             return new NamedNode(word);
         } else if (allowLiteral && n3Util.isLiteral(word)) {
             const value    = n3Util.getLiteralValue(word);
-            const language = n3Util.getLiteralLanguage(word); // TODO test if language and datatype exist
-            const datatype = n3Util.getLiteralType(word);
+            const language = n3Util.getLiteralLanguage(word) || undefined;
+            const datatype = n3Util.getLiteralType(word)     || undefined;
             return new Literal(value, {language, datatype});
         } else {
             throw new Error(`Could not parse ${word}.`);
@@ -35,51 +36,26 @@ export default class TurtleReader {
         return new Triple(subject, predicate, object);
     }
 
-    async parse(toParse, {base = "", filter = ()=>true, graph = new Graph(), profile = new Profile()} = {}) { // TODO: base
-        await this.parser.parse(
-            toParse,
-            (err, triple, prefixes) => {
-                console.log(err, triple, prefixes)
+    parse(s, { filter = ()=>true, graph = new Graph(), profile = new Profile() } = {}) {
+        return new Promise((resolve, reject) => this.parser.parse(
+            s,
+            (err, n3Triple, prefixes) => {
                 if (err) {
-                    throw err;
+                    reject(err);
                 }
-                if (triple) {
-                    const triple = this.parseTriple(triple);
-                    console.log(triple);
+                if (n3Triple) {
+                    const triple = this.parseTriple(n3Triple);
                     if (filter(triple)) {
                         graph.add(triple);
                     }
                 }
                 if (prefixes) {
-                    console.log(graph.toString());
-                    return graph; // TODO graph has to be pulled out
+                    resolve({graph, profile});
                 }
             },
-            ::profile.setPrefix
-        );
-        console.log(graph);
-        console.log(graph.toString())
-        return graph.toString();
-    }
-
-    * process(toParse, {base = "", profile = new RDFEnvironment()} = {}) { // TODO base
-        this.parser.parse(
-            toParse,
-            (err, triple, prefixes) => {
-                if (err) {
-                    throw err;
-                }
-                if (triple) {
-                    const triple = this.parseTriple(triple);
-                    if (filter(triple)) {
-                        //yield triple;
-                    }
-                }
-                if (prefixes) {
-                    return;
-                }
-            },
-            ::profile.setPrefix
-        );
+            (prefix, iri) => {
+                profile.setPrefix(prefix, iri);
+            }
+        ));
     }
 }
