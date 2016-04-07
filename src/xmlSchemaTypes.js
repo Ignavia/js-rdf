@@ -1,3 +1,6 @@
+/**
+ * A collection of some basic XMLSchema types.
+ */
 export const xmlSchemaTypes = {
     string:             "http://www.w3.org/2001/XMLSchema#string",
     boolean:            "http://www.w3.org/2001/XMLSchema#boolean",

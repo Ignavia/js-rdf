@@ -16,8 +16,29 @@ export default class Triple {
      * The object associated with the triple.
      */
     constructor(subject, predicate, object) {
+
+        /**
+         * The subject associated with the triple.
+         *
+         * @type {RDFNode}
+         * @private
+         */
         this.subject = subject;
+
+         /**
+         * The predicate associated with the triple.
+         *
+         * @type {RDFNode}
+         * @private
+         */
         this.predicate = predicate;
+
+         /**
+         * The object associated with the triple.
+         *
+         * @type {RDFNode}
+         * @private
+         */
         this.object = object;
     }
 

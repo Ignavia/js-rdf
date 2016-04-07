@@ -10,7 +10,9 @@ import Profile   from "./Profile.js";
 
 
 /**
- * Transforms a turtle string into a graph and a profile.
+ * Transforms a Turtle string into a graph and a profile.
+ *
+ * @see https://www.w3.org/TR/rdf-interfaces/#data-parsers
  */
 export default class TurtleReader {
 
@@ -38,13 +40,13 @@ export default class TurtleReader {
      * @param {Object} options
      * The options object.
      *
-     * @param {Boolean} allowBlank
+     * @param {Boolean} [options.allowBlank=true]
      * Whether blank nodes are allowed.
      *
-     * @param {Boolean} allowNamed
+     * @param {Boolean} [options.allowNamed=true]
      * Whether named nodes are allowed.
      *
-     * @param {Boolean} allowLiteral
+     * @param {Boolean} [options.allowLiteral=true]
      * Whether literals are allowed.
      *
      * @return {RDFNode}
@@ -88,26 +90,28 @@ export default class TurtleReader {
     }
 
     /**
-     * Parses a string an returns a graph and a profile.
+     * Parses a Turtle string an returns a graph and a profile.
      *
      * @param {String} s
-     * The string to parse.
+     * The Turtle string to parse.
      *
      * @param {Object} options
      * The options object.
      *
-     * @param {Function} filter
+     * @param {Function} [options.filter]
      * Determines which triple to include in the resulting graph.
      *
-     * @param {Graph} [graph]
+     * @param {Graph} [options.graph]
      * The graph to add the triples to.
      *
-     * @param {Profile} [profile]
+     * @param {Profile} [options.profile]
      * The profile to add the prefixes and terms to.
      *
      * @return {Promise}
      * A promise that eventually resolves to the resulting graph or profile. If
      * there is an error, the promise is rejected.
+     *
+     * @see https://www.w3.org/TR/rdf-interfaces/#widl-DataParser-parse-boolean-any-toparse-ParserCallback-callback-DOMString-base-TripleFilter-filter-Graph-graph
      */
     parse(s, { filter = ()=>true, graph = new Graph(), profile = new Profile() } = {}) {
         return new Promise((resolve, reject) => this.parser.parse(
