@@ -8,34 +8,107 @@ import Literal   from "./Literal.js";
 import NamedNode from "./NamedNode.js";
 import Profile   from "./Profile.js";
 
+
+/**
+ * Transforms a turtle string into a graph and a profile.
+ */
 export default class TurtleReader {
+
+    /**
+     *
+     */
     constructor() {
+
+        /**
+         * The N3.js parser.
+         *
+         * @type {*}
+         * @private
+         */
         this.parser = n3.Parser();
     }
 
-    parseWord(word, {allowBlank = true, allowNamed = true, allowLiteral = true} = {}) {
-        if (allowBlank && n3Util.isBlank(word)) {
-            word = word.replace(/^_:b[0-9]+_/, "");
-            return new BlankNode(word);
-        } else if (allowNamed && n3Util.isIRI(word)) {
-            return new NamedNode(word);
-        } else if (allowLiteral && n3Util.isLiteral(word)) {
-            const value    = n3Util.getLiteralValue(word);
-            const language = n3Util.getLiteralLanguage(word) || undefined;
-            const datatype = n3Util.getLiteralType(word)     || undefined;
+    /**
+     * Transforms an N3 word (subject, predicate, object as a string) into the
+     * corresponding RDFNode.
+     *
+     * @param {String} n3Word
+     * The word to transform.
+     *
+     * @param {Object} options
+     * The options object.
+     *
+     * @param {Boolean} allowBlank
+     * Whether blank nodes are allowed.
+     *
+     * @param {Boolean} allowNamed
+     * Whether named nodes are allowed.
+     *
+     * @param {Boolean} allowLiteral
+     * Whether literals are allowed.
+     *
+     * @return {RDFNode}
+     * The respective RDFNode.
+     *
+     * @throws {Error}
+     * If the word is invalid.
+     */
+    parseN3Word(n3Word, {allowBlank = true, allowNamed = true, allowLiteral = true} = {}) {
+        if (allowBlank && n3Util.isBlank(n3Word)) {
+            n3Word = n3Word.replace(/^_:b[0-9]+_/, "");
+            return new BlankNode(n3Word);
+        } else if (allowNamed && n3Util.isIRI(n3Word)) {
+            return new NamedNode(n3Word);
+        } else if (allowLiteral && n3Util.isLiteral(n3Word)) {
+            const value    = n3Util.getLiteralValue(n3Word);
+            const language = n3Util.getLiteralLanguage(n3Word) || undefined;
+            const datatype = n3Util.getLiteralType(n3Word)     || undefined;
             return new Literal(value, {language, datatype});
         } else {
-            throw new Error(`Could not parse ${word}.`);
+            throw new Error(`Could not parse ${n3Word}.`);
         }
     }
 
-    parseTriple(triple) {
-        const subject   = this.parseWord(triple.subject,   {allowLiteral: false});
-        const predicate = this.parseWord(triple.predicate, {allowBlank: false, allowLiteral: false});
-        const object    = this.parseWord(triple.object);
+    /**
+     * Transform an N3 triple object into our implementation.
+     *
+     * @param {*} n3Triple
+     * A triple made by the N3 parser.
+     *
+     * @return {Triple}
+     * The corresponding triple.
+     *
+     * @private
+     */
+    parseN3Triple(n3Triple) {
+        const subject   = this.parseN3Word(n3Triple.subject,   {allowLiteral: false});
+        const predicate = this.parseN3Word(n3Triple.predicate, {allowBlank: false, allowLiteral: false});
+        const object    = this.parseN3Word(n3Triple.object);
         return new Triple(subject, predicate, object);
     }
 
+    /**
+     * Parses a string an returns a graph and a profile.
+     *
+     * @param {String} s
+     * The string to parse.
+     *
+     * @param {Object} options
+     * The options object.
+     *
+     * @param {Function} filter
+     * Determines which triple to include in the resulting graph.
+     *
+     * @param {Graph} [graph]
+     * The graph to add the triples to.
+     *
+     * @param {Profile} [profile]
+     * The profile to add the prefixes and terms to.
+     *
+     * @return {Promise}
+     * A promise that eventually resolves to the resulting graph or profile. If
+     * there is an error, the promise is rejected.
+     */
     parse(s, { filter = ()=>true, graph = new Graph(), profile = new Profile() } = {}) {
         return new Promise((resolve, reject) => this.parser.parse(
             s,
@@ -44,7 +117,7 @@ export default class TurtleReader {
                     reject(err);
                 }
                 if (n3Triple) {
-                    const triple = this.parseTriple(n3Triple);
+                    const triple = this.parseN3Triple(n3Triple);
                     if (filter(triple)) {
                         graph.add(triple);
                     }

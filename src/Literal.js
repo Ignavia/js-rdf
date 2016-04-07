@@ -55,6 +55,8 @@ const converter = {
     [xsd.unsignedByte]:       Number
 };
 
+const langString = "http://www.w3.org/1999/02/22-rdf-syntax-ns#langString";
+
 /**
  * Represents an RDF literal.
  *
@@ -75,7 +77,7 @@ export default class Literal extends RDFNode {
      * @param {String} [options.datatype=null]
      * The datatype of this literal.
      */
-    constructor(value, {language = null, datatype = null} = {}) {
+    constructor(value, {language = null, datatype = language === null ? xsd.string : langString} = {}) {
         super("Literal", value);
 
         /**
@@ -99,9 +101,9 @@ export default class Literal extends RDFNode {
     equals(toCompare) {
         if (toCompare instanceof RDFNode) {
             return this.interfaceName === toCompare.interfaceName &&
-                   this.nominalValue  === toCompare.nominalValue  &&
-                   this.language      === toCompare.language      &&
-                   this.datatype      === toCompare.datatype;
+                    this.nominalValue === toCompare.nominalValue  &&
+                    this.language     === toCompare.language &&
+                    (this.datatype    === toCompare.datatype || this.language !== null);
         }
         return toPrimitive(this) === toPrimitive(toCompare);
     }

@@ -17,7 +17,7 @@ describe("Triple", function () {
     describe("#toString", function () {
         it("should return an N-Triples representation of this triple", function () {
             const t  = new Triple(new BlankNode("b1"), new NamedNode("n1"), new Literal("l1"));
-            expect(t.toString()).to.equal(`_:b1 <n1> "l1"`);
+            expect(t.toString()).to.equal(`_:b1 <n1> "l1"^^<http://www.w3.org/2001/XMLSchema#string>`);
         });
     });
 });

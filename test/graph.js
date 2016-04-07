@@ -280,6 +280,7 @@ describe("Graph", function () {
         delete this.t2;
         delete this.t3;
         delete this.t4;
-        delete this.g;
+        delete this.g0;
+        delete this.g1;
     });
 });

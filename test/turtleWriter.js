@@ -8,18 +8,19 @@ describe("TurtleWriter", function () {
         const t1 = new Triple(new NamedNode("b1"), new NamedNode("n1"), new Literal("1", {datatype: xsd.integer}));
         const t2 = new Triple(new BlankNode("b1"), new NamedNode("n1"), new Literal("l1"));
         const t3 = new Triple(new BlankNode("b1"), new NamedNode("n2"), new NamedNode("n1"));
-        this.g0 = new Graph([t0, t1, t2, t3]);
+        this.g = new Graph([t0, t1, t2, t3]);
 
         this.writer = new TurtleWriter();
     });
 
     describe("#serialize", function () {
-        it("should add the triple to the graph", function () {
-            console.log(this.writer.serialize(this.g0))
+        it("should return a string", function () {
+            expect(this.writer.serialize(this.g)).to.be.a("string");
         });
     });
 
     after(function () {
         delete this.g;
+        delete this.writer;
     });
 });

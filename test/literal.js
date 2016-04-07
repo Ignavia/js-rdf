@@ -62,7 +62,7 @@ describe("Literal", function () {
     describe("#toNT", function () {
         it("should return the N-Triples representation", function () {
             const l1 = new Literal("l1");
-            expect(l1.toNT()).to.equal(`"l1"`);
+            expect(l1.toNT()).to.equal(`"l1"^^<http://www.w3.org/2001/XMLSchema#string>`);
 
             const l2 = new Literal("l2", {language: "de"});
             expect(l2.toNT()).to.equal(`"l2"@de`);
