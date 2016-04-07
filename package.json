@@ -54,7 +54,7 @@
   "jspm": {
     "name": "@ignavia/rdf",
     "dependencies": {
-      "@ignavia/util": "npm:@ignavia/util@^1.1.7"
+      "@ignavia/util": "npm:@ignavia/util@^1.2.4"
     },
     "devDependencies": {
       "babel-plugin-transform-export-extensions": "npm:babel-plugin-transform-export-extensions@^6.5.0",

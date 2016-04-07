@@ -16,9 +16,6 @@ SystemJS.config({
                 }
             }
         }
-    },
-    map: {
-        "": "npm:@ignavia/util@1.1.7"
     }
 });
 
@@ -58,7 +55,7 @@ SystemJS.config({
         },
         "npm:@ignavia/util@1.2.4": {
             "map": {
-                "lodash": "npm:lodash@4.6.1"
+                "lodash": "npm:lodash@4.8.2"
             }
         },
         "npm:babel-plugin-syntax-export-extensions@6.5.0": {
