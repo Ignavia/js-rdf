@@ -58,6 +58,28 @@ export default class Profile {
     }
 
     /**
+     * Returns a string representing the given RDFNode. Literals might be
+     * replaced with terms stored in this profile, while names nodes might be
+     * shrunk to a CURIE. If no matches are found in this profile, the normal
+     * toString method is called.
+     *
+     * @param {RDFNode} node
+     * The node to stringify.
+     *
+     * @return {String}
+     * The resulting string.
+     */
+    nodeToString(node) {
+        if (node.interfaceName === "Literal") {
+            return this.terms.shrink(node.toString());
+        } else if (node.interfaceName === "NamedNode") {
+            return this.prefixes.shrink(node.toString());
+        } else {
+            return node.toString();
+        }
+    }
+
+    /**
      * This method sets the default prefix for use when resolving CURIEs without
      * a prefix, for example ":me"
      *

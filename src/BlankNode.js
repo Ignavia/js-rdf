@@ -2,7 +2,7 @@ import RDFNode from "./RDFNode.js";
 
 /**
  * Represents an RDF blank node.
- * 
+ *
  * @see https://www.w3.org/TR/rdf-interfaces/#blank-nodes
  */
 export default class BlankNode extends RDFNode {
@@ -38,7 +38,7 @@ export default class BlankNode extends RDFNode {
      * @override
      */
     toString() {
-        return `_:${this.nominalValue}`;
+        return `${this.nominalValue}`;
     }
 
     /**

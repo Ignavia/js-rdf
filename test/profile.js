@@ -1,6 +1,6 @@
 import {expect} from "chai";
 
-import {Profile, PrefixMap, TermMap} from "../src/rdf.js";
+import {BlankNode, Literal, NamedNode, Profile, PrefixMap, TermMap} from "../src/rdf.js";
 
 describe("PrefixMap", function () {
     beforeEach(function () {
@@ -31,8 +31,8 @@ describe("PrefixMap", function () {
         it("should resolve a CURIE without prefix", function () {
             this.p.setDefaultPrefix("http://codelottery.eu#");
 
-            const r0 = this.p.resolve(":world");
-            expect(r0).to.equal("http://codelottery.eu#world");
+            const r = this.p.resolve(":world");
+            expect(r).to.equal("http://codelottery.eu#world");
         });
 
         it("should return the IRI for a term", function () {
@@ -46,8 +46,25 @@ describe("PrefixMap", function () {
         it("should return the default IRI if nothing was found", function () {
             this.p.setDefaultVocabulary("http://codelottery.eu#");
 
-            const r0 = this.p.resolve("world");
-            expect(r0).to.equal("http://codelottery.eu#world");
+            const r = this.p.resolve("world");
+            expect(r).to.equal("http://codelottery.eu#world");
+        });
+    });
+
+    describe("#nodeToString", function () {
+        it("should shrink named nodes", function () {
+            const r = this.p.nodeToString(new NamedNode("http://example.org/test"));
+            expect(r).to.equal("ex:test");
+        });
+
+        it("should shrink literals", function () {
+            const r = this.p.nodeToString(new Literal("http://example.org/"));
+            expect(r).to.equal("ex");
+        });
+
+        it("should use the toString method if no matches are found", function () {
+            const r = this.p.nodeToString(new BlankNode("http://example.org/test"));
+            expect(r).to.equal("http://example.org/test");
         });
     });
 

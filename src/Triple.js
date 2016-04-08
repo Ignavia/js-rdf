@@ -1,3 +1,13 @@
+import {IDGenerator} from "@ignavia/util";
+
+/**
+ * Provides IDs for triple.
+ *
+ * @type {IDGenerator}
+ * @ignore
+ */
+const idGenerator = new IDGenerator("t");
+
 /**
  * Represents an RDF triple.
  *
@@ -21,7 +31,6 @@ export default class Triple {
          * The subject associated with the triple.
          *
          * @type {RDFNode}
-         * @private
          */
         this.subject = subject;
 
@@ -29,7 +38,6 @@ export default class Triple {
          * The predicate associated with the triple.
          *
          * @type {RDFNode}
-         * @private
          */
         this.predicate = predicate;
 
@@ -37,9 +45,15 @@ export default class Triple {
          * The object associated with the triple.
          *
          * @type {RDFNode}
-         * @private
          */
         this.object = object;
+
+        /**
+         * The ID of this triple.
+         *
+         * @type {String}
+         */
+        this.id = idGenerator.next();
     }
 
     /**

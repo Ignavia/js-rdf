@@ -31,9 +31,9 @@ describe("BlankNode", function () {
     });
 
     describe("#toString", function () {
-        it("should return the stringified nominalValue with prepended _:", function () {
+        it("should return the stringified nominalValue", function () {
             const b = new BlankNode("b");
-            expect(b.toString()).to.equal("_:b");
+            expect(b.toString()).to.equal("b");
         });
     });
 

@@ -1,3 +1,13 @@
+import {IDGenerator} from "@ignavia/util";
+
+/**
+ * Provides IDs for RDFNodes.
+ *
+ * @type {IDGenerator}
+ * @ignore
+ */
+const idGenerator = new IDGenerator("n");
+
 /**
  * Defines an interface for RDFNodes.
  *
@@ -29,6 +39,13 @@ export default class RDFNode {
          * @type {*}
          */
         this.nominalValue = nominalValue;
+
+        /**
+         * The ID of this RDFNode.
+         *
+         * @type {String}
+         */
+        this.id = idGenerator.next();
     }
 
     /**

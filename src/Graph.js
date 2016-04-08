@@ -1,6 +1,14 @@
-import {EventManager, GumpMap, observableExtendedMixin, tortilla} from "@ignavia/util";
+import {EventManager, IDGenerator, GumpMap, observableExtendedMixin, tortilla} from "@ignavia/util";
 
 import Literal from "./Literal.js";
+
+/**
+ * Provides IDs for graphs.
+ *
+ * @type {IDGenerator}
+ * @ignore
+ */
+const idGenerator = new IDGenerator("g");
 
 /**
  * Turns the given value into a primitive value using the [Symbol.toPrimitive]
@@ -56,6 +64,13 @@ export default class Graph {
      * An array with all triples to add initially.
      */
     constructor(initialValues = []) {
+
+        /**
+         * The ID of this graph.
+         *
+         * @type {String}
+         */
+        this.id = idGenerator.next();
 
         /**
          * Maps from subjects to isLiteral to predicates to objects to triples.
