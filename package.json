@@ -51,6 +51,9 @@
       }
     }
   },
+  "jspmPackage": true,
+  "registry": "npm",
+  "format": "cjs",
   "jspm": {
     "name": "@ignavia/rdf",
     "dependencies": {
