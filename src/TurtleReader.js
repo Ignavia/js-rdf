@@ -7,7 +7,6 @@ import Literal   from "./Literal.js";
 import NamedNode from "./NamedNode.js";
 import Profile   from "./Profile.js";
 
-
 /**
  * Transforms a Turtle string into a graph and a profile.
  *
