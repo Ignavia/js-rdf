@@ -1,5 +1,4 @@
-import n3 from "n3";
-const n3Util = n3.Util;
+import n3, {Util as n3Util} from "n3";
 
 import Graph     from "./Graph.js";
 import Triple    from "./Triple.js";
