@@ -19,11 +19,11 @@ export default class PrefixMap {
          * @type {Tolkien1To1Map}
          * @private
          */
-        this.prefixToPath = new Tolkien1To1Map();
+        this.prefixToNamespace = new Tolkien1To1Map();
 
         // Add initial values
-        for (let [prefix, path] of initialValues) {
-            this.set(prefix, path);
+        for (let [prefix, ns] of initialValues) {
+            this.set(prefix, ns);
         }
     }
 
@@ -33,25 +33,25 @@ export default class PrefixMap {
      * @type {Number}
      */
     get size() {
-        return this.prefixToPath.size;
+        return this.prefixToNamespace.size;
     }
 
     /**
-     * Connects the given prefix and IRI.
+     * Connects the given prefix and namespace.
      *
      * @param {String} prefix
      * The prefix to use.
      *
-     * @param {String} iri
-     * The IRI to use.
+     * @param {String} ns
+     * The namespace to use.
      *
      * @return {TermMap}
      * The TermMap to make the object chainable.
      *
      * @see https://www.w3.org/TR/rdf-interfaces/#widl-PrefixMap-set-omittable-setter-void-DOMString-prefix-DOMString-iri
      */
-    set(prefix, iri) {
-        this.prefixToPath.add(prefix, iri);
+    set(prefix, ns) {
+        this.prefixToNamespace.add(prefix, ns);
         return this;
     }
 
@@ -65,20 +65,20 @@ export default class PrefixMap {
      * Whether an entry for the given prefix exists.
      */
     hasPrefix(prefix) {
-        return this.prefixToPath.hasX(prefix);
+        return this.prefixToNamespace.hasX(prefix);
     }
 
     /**
-     * Tests if an entry for the given IRI exists.
+     * Tests if an entry for the given namespace exists.
      *
-     * @param {String} iri
-     * The IRI to test.
+     * @param {String} ns
+     * The namespace to test.
      *
      * @return {Boolean}
-     * Whether an entry for the given IRI exists.
+     * Whether an entry for the given namespace exists.
      */
-    hasIRI(iri) {
-        return this.prefixToPath.hasY(iri);
+    hasNamespace(ns) {
+        return this.prefixToNamespace.hasY(ns);
     }
 
     /**
@@ -90,7 +90,7 @@ export default class PrefixMap {
      * @see https://www.w3.org/TR/rdf-interfaces/#widl-PrefixMap-remove-omittable-deleter-void-DOMString-prefix
      */
     remove(prefix) {
-        this.prefixToPath.deleteX(prefix);
+        this.prefixToNamespace.deleteX(prefix);
     }
 
     /**
@@ -108,9 +108,9 @@ export default class PrefixMap {
      */
     resolve(curie) {
         const [prefix, name] = curie.split(":");
-        const path = this.prefixToPath.convertXToY(prefix)[0];
-        if (path) {
-            return path + name;
+        const ns = this.prefixToNamespace.convertXToY(prefix)[0];
+        if (ns) {
+            return ns + name;
         }
         return null;
     }
@@ -138,9 +138,9 @@ export default class PrefixMap {
             return result;
         }
 
-        for (let [prefix, path] of this.prefixToPath) {
-            if (iri.startsWith(path)) {
-                const name = iri.slice(path.length);
+        for (let [prefix, ns] of this.prefixToNamespace) {
+            if (iri.startsWith(ns)) {
+                const name = iri.slice(ns.length);
                 return `${prefix}:${name}`;
             }
         }
@@ -164,25 +164,25 @@ export default class PrefixMap {
      * @private
      */
     trySplit(iri, splitIndex) {
-        const path = iri.slice(0, splitIndex + 1);
+        const ns   = iri.slice(0, splitIndex + 1);
         const name = iri.slice(splitIndex + 1);
 
-        if (this.prefixToPath.hasY(iri)) {
-            const prefix = this.prefixToPath.convertYToX(path)[0];
+        if (this.prefixToNamespace.hasY(iri)) {
+            const prefix = this.prefixToNamespace.convertYToX(ns)[0];
             return `${prefix}:${name}`;
         }
     }
 
     /**
-     * Sets the default IRI to be used when resolving CURIEs without prefix.
+     * Sets the default namespace to be used when resolving CURIEs without prefix.
      *
-     * @param {String} iri
-     * The default IRI.
+     * @param {String} ns
+     * The default namespace.
      *
      * @see https://www.w3.org/TR/rdf-interfaces/#widl-PrefixMap-setDefault-void-DOMString-iri
      */
-    setDefault(iri) {
-        this.set("", iri);
+    setDefault(ns) {
+        this.set("", ns);
     }
 
     /**
@@ -201,9 +201,9 @@ export default class PrefixMap {
      * @see https://www.w3.org/TR/rdf-interfaces/#widl-PrefixMap-addAll-PrefixMap-PrefixMap-prefixes-boolean-override
      */
     addAll(prefixes, override = false) {
-        for (let [prefix, path] of prefixes) {
-            if (override || !this.prefixToPath.hasEither(prefix, path)) {
-                this.set(prefix, path);
+        for (let [prefix, ns] of prefixes) {
+            if (override || !this.prefixToNamespace.hasEither(prefix, ns)) {
+                this.set(prefix, ns);
             }
         }
         return this;
@@ -213,21 +213,21 @@ export default class PrefixMap {
      * Yields all prefixes in this map.
      */
     * prefixes() {
-        yield* this.prefixToPath.xs();
+        yield* this.prefixToNamespace.xs();
     }
 
     /**
-     * Yields all IRIs in this map.
+     * Yields all namespaces in this map.
      */
-    * iris() {
-        yield* this.prefixToPath.ys();
+    * namespaces() {
+        yield* this.prefixToNamespace.ys();
     }
 
     /**
      * Yields all prefix-IRI-entries in this map.
      */
     * entries() {
-        yield* this.prefixToPath.entries();
+        yield* this.prefixToNamespace.entries();
     }
 
     /**

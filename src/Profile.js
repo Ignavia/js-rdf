@@ -66,13 +66,22 @@ export default class Profile {
      * @param {RDFNode} node
      * The node to stringify.
      *
+     * @param {Object} [conf]
+     * The configuration object.
+     *
+     * @param {Boolean} [conf.shrinkTerms=true]
+     * Whether terms should be shrunk.
+     *
+     * @param {Boolean} [conf.shrinkPrefixes=true]
+     * Whether prefixes should be shrunk.
+     *
      * @return {String}
      * The resulting string.
      */
-    nodeToString(node) {
-        if (node.interfaceName === "Literal") {
+    nodeToString(node, {shrinkTerms = true, shrinkPrefixes = true} = {}) {
+        if (shrinkTerms && node.interfaceName === "Literal") {
             return this.terms.shrink(node.toString());
-        } else if (node.interfaceName === "NamedNode") {
+        } else if (shrinkPrefixes && node.interfaceName === "NamedNode") {
             return this.prefixes.shrink(node.toString());
         } else {
             return node.toString();

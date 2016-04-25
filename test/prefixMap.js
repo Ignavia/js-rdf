@@ -16,16 +16,16 @@ describe("PrefixMap", function () {
             expect(this.pm.hasPrefix("ex")).to.be.true;
             expect(this.pm.hasPrefix("foo")).to.be.true;
             expect(this.pm.hasPrefix("bar")).to.be.true;
-            expect(this.pm.hasIRI("http://example.org/"));
-            expect(this.pm.hasIRI("http://foo.de/"));
-            expect(this.pm.hasIRI("http://bar.com#"));
+            expect(this.pm.hasNamespace("http://example.org/"));
+            expect(this.pm.hasNamespace("http://foo.de/"));
+            expect(this.pm.hasNamespace("http://bar.com#"));
             expect(this.pm.size).to.equal(3);
         });
 
         it("should override previous connections", function () {
             this.pm.set("foo", "https://foo.de/");
-            expect(this.pm.hasIRI("http://foo.de/")).to.be.false;
-            expect(this.pm.hasIRI("https://foo.de/")).to.be.true;
+            expect(this.pm.hasNamespace("http://foo.de/")).to.be.false;
+            expect(this.pm.hasNamespace("https://foo.de/")).to.be.true;
 
             this.pm.set("emp", "http://example.org/");
             expect(this.pm.hasPrefix("ex")).to.be.false;
@@ -37,7 +37,7 @@ describe("PrefixMap", function () {
         it("should remove the connection between the given prefix and its IRI", function () {
             this.pm.remove("ex");
             expect(this.pm.hasPrefix("ex")).to.be.false;
-            expect(this.pm.hasIRI("http://example.org/")).to.be.false;
+            expect(this.pm.hasNamespace("http://example.org/")).to.be.false;
         });
     });
 
@@ -81,7 +81,7 @@ describe("PrefixMap", function () {
                 ["foo", "https://foo.de/"],
                 ["emp", "http://example.org/"]
             ]);
-            expect(this.pm.hasIRI("https://foo.de/")).to.be.false;
+            expect(this.pm.hasNamespace("https://foo.de/")).to.be.false;
             expect(this.pm.hasPrefix("emp")).to.be.false;
         });
 
@@ -90,7 +90,7 @@ describe("PrefixMap", function () {
                 ["foo", "https://foo.de/"],
                 ["emp", "http://example.org/"]
             ], true);
-            expect(this.pm.hasIRI("https://foo.de/")).to.be.true;
+            expect(this.pm.hasNamespace("https://foo.de/")).to.be.true;
             expect(this.pm.hasPrefix("emp")).to.be.true;
         });
     });
@@ -102,9 +102,9 @@ describe("PrefixMap", function () {
         });
     });
 
-    describe("iris", function () {
-        it("should yield the IRIs in the map", function () {
-            const r0 = [...this.pm.iris()];
+    describe("namespaces", function () {
+        it("should yield the namespaces in the map", function () {
+            const r0 = [...this.pm.namespaces()];
             expect(r0).to.have.members(["http://foo.de/", "http://example.org/", "http://bar.com#"]);
         });
     });
@@ -125,7 +125,7 @@ describe("PrefixMap", function () {
             const r0 = this.pm.clone();
             expect(r0).to.not.equal(this.pm);
             expect(r0.hasPrefix("foo")).to.be.true;
-            expect(r0.hasIRI("http://example.org/")).to.be.true;
+            expect(r0.hasNamespace("http://example.org/")).to.be.true;
         });
     });
 

@@ -57,8 +57,6 @@ function isLiteral(v) {
  */
 export default class Graph {
 
-    // TODO listeners
-
     /**
      * @param {Array} [initialValues=[]]
      * An array with all triples to add initially.

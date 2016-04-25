@@ -13,7 +13,7 @@ describe("RDFEnvironment", function () {
         it("should offer some common prefix-IRI-mappings", function () {
             const prefixes = this.env.prefixes;
             expect(prefixes.hasPrefix("owl")).to.be.true;
-            expect(prefixes.hasIRI("http://www.w3.org/ns/rdfa#")).to.be.true;
+            expect(prefixes.hasNamespace("http://www.w3.org/ns/rdfa#")).to.be.true;
         });
     });
 

@@ -30,7 +30,7 @@ describe("TurtleReader", function () {
 
                 const prefixes = profile.prefixes;
                 expect(prefixes.hasPrefix("ex")).to.be.true;
-                expect(prefixes.hasIRI("http://example.org#")).to.be.true;
+                expect(prefixes.hasNamespace("http://example.org#")).to.be.true;
                 expect(prefixes.size).to.equal(1);
                 done();
             } catch (err) {
