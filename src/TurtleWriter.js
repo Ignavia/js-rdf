@@ -26,11 +26,7 @@ export default class TurtleWriter {
     serializeProfile(profile) {
         let result = "";
         for (let [prefix, ns] of profile.prefixes) {
-            if (prefix === "") {
-                result += `@base <${ns}> .\n`;
-            } else {
-                result += `@prefix ${prefix}: <${ns}> .\n`;
-            }
+            result += `@prefix ${prefix}: <${ns}> .\n`;
         }
         return result;
     }
