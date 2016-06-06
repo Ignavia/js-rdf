@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.5.0 (2016-06-06)
+
+* Added iterators for subject, predicates (given a subject) and objects (given subject and predicate).
+
 ## 1.4.0 (2016-06-06)
 
 * Added maps from IDs to nodes and triples.

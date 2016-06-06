@@ -47,49 +47,118 @@ export default class TurtleWriter {
      */
     serializeGraph(graph, profile) {
         let result = "";
-        for (let triple of graph) {
-            result += this.serializeTriple(triple, profile);
+
+        for (let subject of graph.subjects()) {
+            const nodeString          = this.serializeNode(profile, subject) + " ";
+            const predicateListString = this.serializePredicateList(
+                graph,
+                profile,
+                subject,
+                nodeString.length
+            );
+            result += nodeString + predicateListString + ".\n";
         }
+
         return result;
     }
 
     /**
-     * Serializes the given triple.
+     * Serializes the predicate list of the given subject.
      *
-     * @param {Triple} triple
-     * The triple to serialize.
+     * @param {Graph} graph
+     * The graph to serialize.
      *
      * @param {Profile} profile
      * The profile used to shorten the IRIs of named nodes.
+     *
+     * @param {RDFNode} subject
+     * The subject to match.
+     *
+     * @param {Number} indentationLevel
+     * How far to indent each line.
      *
      * @return {String}
      * The result.
      *
      * @private
      */
-    serializeTriple(triple, profile) {
+    serializePredicateList(graph, profile, subject, indentationLevel) {
         let result = "";
-        result += this.serializeNode(triple.subject,   profile) + " ";
-        result += this.serializeNode(triple.predicate, profile) + " ";
-        result += this.serializeNode(triple.object,    profile) + " .\n";
+        let first = true;
+
+        for (let predicate of graph.predicates(subject)) {
+            const punctuation      = first ? "" : ";\n";
+            const indentation      = first ? "" : this.indentation(indentationLevel);
+            const nodeString       = this.serializeNode(profile, predicate) + " ";
+            const objectListString = this.serializeObjectList(
+                graph,
+                profile,
+                subject,
+                predicate,
+                indentationLevel + nodeString.length
+            );
+            result += punctuation + indentation + nodeString + objectListString;
+
+            first = false;
+        }
+
+        return result;
+    }
+
+    /**
+     * Serializes the object list of the given subject and predicate.
+     *
+     * @param {Graph} graph
+     * The graph to serialize.
+     *
+     * @param {Profile} profile
+     * The profile used to shorten the IRIs of named nodes.
+     *
+     * @param {RDFNode} subject
+     * The subject to match.
+     *
+     * @param {RDFNode} predicate
+     * The predicate to match.
+     *
+     * @param {Number} indentationLevel
+     * How far to indent each line.
+     *
+     * @return {String}
+     * The result.
+     *
+     * @private
+     */
+    serializeObjectList(graph, profile, subject, predicate, indentationLevel) {
+        let result = "";
+        let first = true;
+
+        for (let object of graph.objects(subject, predicate)) {
+            const punctuation = first ? "" : ",\n";
+            const indentation = first ? "" : this.indentation(indentationLevel);
+            const nodeString  = this.serializeNode(profile, object) + " ";
+            result += punctuation + indentation + nodeString;
+
+            first = false;
+        }
+
         return result;
     }
 
     /**
      * Serializes the given RDFNode.
      *
-     * @param {RDFNode} node
-     * The node to serialize.
-     *
      * @param {Profile} profile
      * The profile used to shorten the IRIs of named nodes.
+     *
+     * @param {RDFNode} node
+     * The node to serialize.
      *
      * @return {String}
      * The result.
      *
      * @private
      */
-    serializeNode(node, profile) {
+    serializeNode(profile, node) {
         if (node.interfaceName === "NamedNode") {
             let expanded = node.toString();
             let shrunk   = profile.prefixes.shrink(expanded);
@@ -101,6 +170,22 @@ export default class TurtleWriter {
         } else {
             return node.toNT();
         }
+    }
+
+    /**
+     * Creates a string with the given number of spaces.
+     *
+     * @param {Number} length
+     * The length of the string.
+     *
+     * @private
+     */
+    indentation(length) {
+        let result = "";
+        for (let i = 0; i < length; i++) {
+            result += " ";
+        }
+        return result;
     }
 
     /**
