@@ -1,4 +1,43 @@
 SystemJS.config({
+    paths: {
+        "@ignavia/rdf/": "src/"
+    },
+    devConfig: {
+        "map": {
+            "babel-plugin-transform-export-extensions": "npm:babel-plugin-transform-export-extensions@6.5.0",
+            "babel-plugin-transform-function-bind": "npm:babel-plugin-transform-function-bind@6.5.2",
+            "plugin-babel": "npm:systemjs-plugin-babel@0.0.2"
+        },
+        "packages": {
+            "npm:babel-plugin-syntax-export-extensions@6.5.0": {
+                "map": {
+                    "babel-runtime": "npm:babel-runtime@5.8.38"
+                }
+            },
+            "npm:babel-plugin-syntax-function-bind@6.5.0": {
+                "map": {
+                    "babel-runtime": "npm:babel-runtime@5.8.38"
+                }
+            },
+            "npm:babel-plugin-transform-export-extensions@6.5.0": {
+                "map": {
+                    "babel-plugin-syntax-export-extensions": "npm:babel-plugin-syntax-export-extensions@6.5.0",
+                    "babel-runtime": "npm:babel-runtime@5.8.38"
+                }
+            },
+            "npm:babel-plugin-transform-function-bind@6.5.2": {
+                "map": {
+                    "babel-plugin-syntax-function-bind": "npm:babel-plugin-syntax-function-bind@6.5.0",
+                    "babel-runtime": "npm:babel-runtime@5.8.38"
+                }
+            },
+            "npm:babel-runtime@5.8.38": {
+                "map": {
+                    "core-js": "npm:core-js@1.2.6"
+                }
+            }
+        }
+    },
     transpiler: "plugin-babel",
     packages: {
         "@ignavia/rdf": {
@@ -27,8 +66,6 @@ SystemJS.config({
     ],
     map: {
         "@ignavia/util": "npm:@ignavia/util@1.2.4",
-        "babel-plugin-transform-export-extensions": "npm:babel-plugin-transform-export-extensions@6.5.0",
-        "babel-plugin-transform-function-bind": "npm:babel-plugin-transform-function-bind@6.5.2",
         "buffer": "github:jspm/nodelibs-buffer@0.2.0-alpha",
         "core-js": "npm:core-js@1.2.6",
         "events": "github:jspm/nodelibs-events@0.2.0-alpha",
@@ -36,7 +73,6 @@ SystemJS.config({
         "n3": "npm:n3@0.4.5",
         "net": "github:jspm/nodelibs-net@0.2.0-alpha",
         "path": "github:jspm/nodelibs-path@0.2.0-alpha",
-        "plugin-babel": "npm:systemjs-plugin-babel@0.0.2",
         "process": "github:jspm/nodelibs-process@0.2.0-alpha",
         "stream": "github:jspm/nodelibs-stream@0.2.0-alpha",
         "tty": "github:jspm/nodelibs-tty@0.2.0-alpha",
@@ -56,33 +92,6 @@ SystemJS.config({
         "npm:@ignavia/util@1.2.4": {
             "map": {
                 "lodash": "npm:lodash@4.8.2"
-            }
-        },
-        "npm:babel-plugin-syntax-export-extensions@6.5.0": {
-            "map": {
-                "babel-runtime": "npm:babel-runtime@5.8.38"
-            }
-        },
-        "npm:babel-plugin-syntax-function-bind@6.5.0": {
-            "map": {
-                "babel-runtime": "npm:babel-runtime@5.8.38"
-            }
-        },
-        "npm:babel-plugin-transform-export-extensions@6.5.0": {
-            "map": {
-                "babel-plugin-syntax-export-extensions": "npm:babel-plugin-syntax-export-extensions@6.5.0",
-                "babel-runtime": "npm:babel-runtime@5.8.38"
-            }
-        },
-        "npm:babel-plugin-transform-function-bind@6.5.2": {
-            "map": {
-                "babel-plugin-syntax-function-bind": "npm:babel-plugin-syntax-function-bind@6.5.0",
-                "babel-runtime": "npm:babel-runtime@5.8.38"
-            }
-        },
-        "npm:babel-runtime@5.8.38": {
-            "map": {
-                "core-js": "npm:core-js@1.2.6"
             }
         },
         "npm:buffer@4.5.1": {

@@ -8,10 +8,15 @@ import {Graph, Triple, BlankNode, NamedNode, Literal, xmlSchemaTypes as xsd} fro
 
 describe("Graph", function () {
     beforeEach(function () {
-        this.t0 = new Triple(new BlankNode("b1"), new NamedNode("n1"), new Literal("l1"));
+        this.n0 = new BlankNode("b1");
+        this.n1 = new Literal("l1");
+        this.n2 = new NamedNode("n1");
+
+        this.t0 = new Triple(this.n0, new NamedNode("n1"), this.n1);
         this.t1 = new Triple(new NamedNode("b1"), new NamedNode("n1"), new Literal("1", {datatype: xsd.integer}));
         this.t2 = new Triple(new BlankNode("b1"), new NamedNode("n1"), new Literal("l1"));
-        this.t3 = new Triple(new BlankNode("b1"), new NamedNode("n2"), new NamedNode("n1"));
+        this.t3 = new Triple(this.n0, new NamedNode("n2"), new NamedNode("n1"));
+
         this.g0 = new Graph([this.t0, this.t1, this.t2, this.t3]);
 
         this.t4 = new Triple(new BlankNode("b1"), new NamedNode("n2"), new NamedNode("n3"));
@@ -58,6 +63,43 @@ describe("Graph", function () {
         it("should test if a triple or an equivalent one exists", function () {
             expect(this.g0.has(this.t0)).to.be.true;
             expect(this.g0.has(this.t2)).to.be.true;
+        });
+    });
+
+    describe("#iterEquivalentNodes", function () {
+        it("should return an iterable over the equivalent nodes", function () {
+            const r0 = [...this.g0.iterEquivalentNodes(this.n0)];
+            expect(r0.length).to.equal(1);
+
+            const r1 = [...this.g0.iterEquivalentNodes(this.n2)];
+            expect(r1.length).to.equal(3);
+        });
+    });
+
+    describe("#iterEquivalentTriples", function () {
+        it("should return an iterable over the equivalent triple", function () {
+            const r0 = [...this.g0.iterEquivalentTriples(this.t0)];
+            expect(r0.length).to.equal(1);
+
+            const r1 = [...this.g0.iterEquivalentTriples(this.t4)];
+            expect(r1.length).to.equal(0);
+        });
+    });
+
+    describe("#getNodeById", function () {
+        it("should return the node for an ID", function () {
+            this.g0.remove(this.t0);
+            expect(this.g0.getNodeById(this.n0.id)).to.equal(this.n0);
+            expect(this.g0.getNodeById(this.n1.id)).to.be.undefined;
+            expect(this.g0.getNodeById(this.n2.id)).to.be.undefined;
+        });
+    });
+
+    describe("#getTripleById", function () {
+        it("should return the triple for an ID", function () {
+            this.g0.remove(this.t3);
+            expect(this.g0.getTripleById(this.t0.id)).to.equal(this.t0);
+            expect(this.g0.getTripleById(this.t3.id)).to.be.undefined;
         });
     });
 

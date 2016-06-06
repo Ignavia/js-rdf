@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.4.0 (2016-06-06)
+
+* Added maps from IDs to nodes and triples.
+
 ## 1.3.0 (2016-04-25)
 
 * Enhanced the Turtle writer to use prefixes.

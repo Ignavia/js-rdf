@@ -95,6 +95,22 @@ export default class Graph {
         this.osp = new GumpMap();
 
         /**
+         * Maps from IDs to nodes.
+         *
+         * @type {Map}
+         * @private
+         */
+        this.nodes = new Map();
+
+        /**
+         * Maps from IDs to triples.
+         *
+         * @type {Map}
+         * @private
+         */
+        this.triples = new Map();
+
+        /**
          * Manages events and listeners.
          *
          * @type {EventManager}
@@ -139,6 +155,11 @@ export default class Graph {
             this.pos.add([p, o, s], triple);
             this.osp.add([o, s, p], triple);
 
+            this.addNodeToIdMap(triple.subject);
+            this.addNodeToIdMap(triple.predicate);
+            this.addNodeToIdMap(triple.object);
+            this.triples.set(triple.id, triple);
+
             this.fireEvent(EventManager.makeEvent({
                 source: this,
                 type:   "add",
@@ -147,6 +168,20 @@ export default class Graph {
         }
 
         return this;
+    }
+
+    /**
+     * Adds the given node to the ID-to-RDFNode-map.
+     *
+     * @param {RDFNode} node
+     * The node to add.
+     */
+    addNodeToIdMap(node) {
+        const count = (this.nodes.has(node.id) ?
+            this.nodes.get(node.id).count + 1 :
+            1
+        );
+        this.nodes.set(node.id, { count, node });
     }
 
     /**
@@ -177,26 +212,68 @@ export default class Graph {
      * Whether the triple exists already.
      */
     has(triple) {
-        return !this.get(triple).isEmpty();
+        return !this.iterEquivalentTriples(triple).isEmpty();
+    }
+
+    /**
+     * Returns an iterable for all matching nodes in this graph.
+     *
+     * @param {RDFNode} node
+     * The node to match.
+     *
+     * @return {TortillaWrapper}
+     * An iterable for all matching nodes.
+     */
+    iterEquivalentNodes(node) {
+        for (let node of this.nodes.values()) {
+            console.log(node)
+        }
+        return tortilla(this.nodes.values())
+            .map(   v => v.node)
+            .filter(n => n.equals(node));
     }
 
     /**
      * Returns an iterable for all matching triples in this graph.
      *
      * @param {Triple} triple
-     * The triple to test.
+     * The triple to match.
      *
      * @return {TortillaWrapper}
      * An iterable for all matching triples.
-     *
-     * @private
      */
-    get(triple) {
+    iterEquivalentTriples(triple) {
         const p = toPrimitive(triple.predicate);
         const o = toPrimitive(triple.object);
         const s = toPrimitive(triple.subject);
 
         return tortilla(this.pos.get([p, o, s])).filter(t => t.equals(triple));
+    }
+
+    /**
+     * Looks up the RDFNode for an ID.
+     *
+     * @param {String} id
+     * The ID of the node.
+     *
+     * @return {RDFNode}
+     * The corresponding node or undefined if none is found.
+     */
+    getNodeById(id) {
+        return (this.nodes.get(id) || {}).node;
+    }
+
+    /**
+     * Looks up the triple for an ID.
+     *
+     * @param {String} id
+     * The ID of the triple.
+     *
+     * @return {RDFNode}
+     * The corresponding triple or undefined if none is found.
+     */
+    getTripleById(id) {
+        return this.triples.get(id);
     }
 
     /**
@@ -211,7 +288,7 @@ export default class Graph {
      * @see https://www.w3.org/TR/rdf-interfaces/#widl-Graph-remove-Graph-Triple-triple
      */
     remove(triple) {
-        const matching = this.get(triple);
+        const matching = this.iterEquivalentTriples(triple);
 
         if (!matching.isEmpty()) {
             for (let triple of matching) {
@@ -223,6 +300,11 @@ export default class Graph {
                 this.slpo.delete([s, l, p, o], triple);
                 this.pos.delete([p, o, s], triple);
                 this.osp.delete([o, s, p], triple);
+
+                this.removeNodeFromIdMap(triple.subject);
+                this.removeNodeFromIdMap(triple.predicate);
+                this.removeNodeFromIdMap(triple.object);
+                this.triples.delete(triple.id);
             }
 
             this.fireEvent(EventManager.makeEvent({
@@ -233,6 +315,21 @@ export default class Graph {
         }
 
         return this;
+    }
+
+    /**
+     * Removes the given node from the ID-to-RDFNode-map.
+     *
+     * @param {RDFNode} node
+     * The node to remove.
+     */
+    removeNodeFromIdMap(node) {
+        const count = this.nodes.get(node.id).count - 1;
+        if (count === 0) {
+            this.nodes.delete(node.id);
+        } else {
+            this.nodes.set(node.id, { count, node });
+        }
     }
 
     /**
@@ -494,6 +591,9 @@ export default class Graph {
             this.slpo.clear();
             this.pos.clear();
             this.osp.clear();
+
+            this.nodes.clear();
+            this.triples.clear();
 
             this.fireEvent(EventManager.makeEvent({
                 source: this,
