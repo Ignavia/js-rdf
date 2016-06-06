@@ -225,9 +225,6 @@ export default class Graph {
      * An iterable for all matching nodes.
      */
     iterEquivalentNodes(node) {
-        for (let node of this.nodes.values()) {
-            console.log(node)
-        }
         return tortilla(this.nodes.values())
             .map(   v => v.node)
             .filter(n => n.equals(node));
@@ -500,9 +497,13 @@ export default class Graph {
     literals(subject) {
         const s = toPrimitive(subject);
 
-        return tortilla(this.slpo.get([s, true]).values()).filter(
-            triple => triple.subject.equals(subject)
-        );
+        if (this.slpo.has([s, true])) {
+            return tortilla(this.slpo.get([s, true]).values()).filter(
+                triple => triple.subject.equals(subject)
+            );
+        } else {
+            return tortilla([]);
+        }
     }
 
     /**
