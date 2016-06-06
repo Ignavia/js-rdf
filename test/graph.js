@@ -288,10 +288,32 @@ describe("Graph", function () {
         });
     });
 
+    describe("#subjects", function () {
+        it("should yield the subjects of all triples", function () {
+            const r0 = [...this.g0.subjects()];
+            expect(r0.length).to.equal(2);
+        });
+    });
+
+    describe("#predicates", function () {
+        it("should yield the predicates of all matching triples", function () {
+            const r0 = [...this.g0.predicates(new BlankNode("b1"))];
+            expect(r0.length).to.equal(2);
+        });
+    });
+
+    describe("#objects", function () {
+        it("should yield the objects of all matching triples", function () {
+            const r0 = [...this.g0.objects(new BlankNode("b1"), new NamedNode("n1"))];
+            expect(r0[0].equals(this.n1)).to.be.true;
+            expect(r0.length).to.equal(1);
+        });
+    });
+
     describe("#literals", function () {
-        it("should yield all triples with the given subject and a literal object", function () {
-            const r0 = [...this.g0.literals(new BlankNode("b1"))];
-            expect(r0[0].equals(this.t2)).to.be.true;
+        it("should yield the literals of all matching triples", function () {
+            const r0 = [...this.g0.literals(new BlankNode("b1"), new NamedNode("n1"))];
+            expect(r0[0].equals(this.n1)).to.be.true;
             expect(r0.length).to.equal(1);
         });
     });

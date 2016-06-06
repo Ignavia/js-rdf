@@ -76,7 +76,7 @@ export default class Graph {
          * @type {GumpMap}
          * @private
          */
-        this.slpo = new GumpMap();
+        this.splo = new GumpMap();
 
         /**
          * Maps from predicates to objects to subjects to triples.
@@ -130,7 +130,7 @@ export default class Graph {
      * @type {Number}
      */
     get length() {
-        return this.slpo.size;
+        return this.splo.size;
     }
 
     /**
@@ -151,7 +151,7 @@ export default class Graph {
             const p = toPrimitive(triple.predicate);
             const o = toPrimitive(triple.object);
 
-            this.slpo.add([s, l, p, o], triple);
+            this.splo.add([s, p, l, o], triple);
             this.pos.add([p, o, s], triple);
             this.osp.add([o, s, p], triple);
 
@@ -294,7 +294,7 @@ export default class Graph {
                 const p = toPrimitive(triple.predicate);
                 const o = toPrimitive(triple.object);
 
-                this.slpo.delete([s, l, p, o], triple);
+                this.splo.delete([s, p, l, o], triple);
                 this.pos.delete([p, o, s], triple);
                 this.osp.delete([o, s, p], triple);
 
@@ -460,49 +460,113 @@ export default class Graph {
         const p = toPrimitive(predicate);
         const o = toPrimitive(object);
 
-        let candidates;
+        let candidates = [];
         if (subject && predicate && object) {
-            candidates = tortilla.concat([
-                this.slpo.get([s, false, p, o]).values(),
-                this.slpo.get([s, true,  p, o]).values()
-            ]);
+            if (this.pos.has([p, o, s])) {
+                candidates = this.pos.get([p, o, s]).values();
+            }
         } else if (subject && predicate) {
-            candidates = tortilla.concat([
-                this.slpo.get([s, false, p]).values(),
-                this.slpo.get([s, true,  p]).values()
-            ]);
+            if (this.splo.has([s, p])) {
+                candidates = this.splo.get([s, p]).values();
+            }
         } else if (predicate && object) {
-            candidates = this.pos.get([p, o]).values();
+            if (this.pos.has([p, o])) {
+                candidates = this.pos.get([p, o]).values();
+            }
         } else if (object && subject) {
-            candidates = this.osp.get([o, s]).values();
+            if (this.osp.has([o, s])) {
+                candidates = this.osp.get([o, s]).values();
+            }
         } else if (subject) {
-            candidates = this.slpo.get(s).values();
+            if (this.splo.has(s)) {
+                candidates = this.splo.get(s).values();
+            }
         } else if (predicate) {
-            candidates = this.pos.get(p).values();
+            if (this.pos.has(p)) {
+                candidates = this.pos.get(p).values();
+            }
         } else if (object) {
-            candidates = this.osp.get(o).values();
+            if (this.osp.has(o)) {
+                candidates = this.osp.get(o).values();
+            }
         } else {
-            candidates = this.slpo.values();
+            candidates = this.splo.values();
         }
 
         return tortilla(candidates);
     }
 
     /**
-     * Yields all triples with the given subject and a literal object.
+     * Yields the subjects of all triples.
+     */
+    * subjects() {
+        const visited = new Set();
+
+        for (let {subject} of this.splo.values()) {
+            const hash = `${subject.interfaceName}#${subject.nominalValue}`;
+            if (!visited.has(hash)) {
+                yield subject;
+                visited.add(hash);
+            }
+        }
+    }
+
+    /**
+     * Yields the predicates of all triples with the given subject.
      *
      * @param {RDFNode} subject
-     * The subject to get the triples for.
+     * The subject to match.
      */
-    literals(subject) {
-        const s = toPrimitive(subject);
+    * predicates(subject) {
+        const visited = new Set();
 
-        if (this.slpo.has([s, true])) {
-            return tortilla(this.slpo.get([s, true]).values()).filter(
-                triple => triple.subject.equals(subject)
-            );
-        } else {
-            return tortilla([]);
+        for (let {predicate} of this.findMatches({subject})) {
+            const hash = predicate.nominalValue;
+            if (!visited.has(hash)) {
+                yield predicate;
+                visited.add(hash);
+            }
+        }
+    }
+
+    /**
+     * Yields the objects of all triples with the given subject and predicate.
+     *
+     * @param {RDFNode} subject
+     * The subject to match.
+     *
+     * @param {RDFNode} predicate
+     * The predicate to match.
+     */
+    * objects(subject, predicate) {
+        for (let {object} of this.findMatches({subject, predicate})) {
+            yield object;
+        }
+    }
+
+    /**
+     * Yields the literals of all triples with the given subject and predicate.
+     *
+     * @param {RDFNode} subject
+     * The subject to match.
+     *
+     * @param {RDFNode} predicate
+     * The predicate to match.
+     */
+    * literals(subject, predicate) {
+        const s = toPrimitive(subject);
+        const p = toPrimitive(predicate);
+
+        if (!this.splo.has([s, p, true])) {
+            return;
+        }
+
+        const iterable = tortilla(this.splo.get([s, p, true]).values())
+            .filter(triple => triple.subject.equals(subject) &&
+                              triple.predicate.equals(predicate));
+
+        for (let {object: literal} of iterable) {
+            yield literal;
         }
     }
 
@@ -589,7 +653,7 @@ export default class Graph {
         if (this.length > 0) {
             const deleted = [...this];
 
-            this.slpo.clear();
+            this.splo.clear();
             this.pos.clear();
             this.osp.clear();
 
@@ -608,7 +672,7 @@ export default class Graph {
      * Yields the triples in this graph. Their order is arbitrary.
      */
     [Symbol.iterator]() {
-        return this.slpo.values();
+        return this.splo.values();
     }
 
     /**
