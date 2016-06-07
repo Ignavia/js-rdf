@@ -538,10 +538,9 @@ export default class Graph {
      * @param {RDFNode} predicate
      * The predicate to match.
      */
-    * objects(subject, predicate) {
-        for (let {object} of this.findMatches({subject, predicate})) {
-            yield object;
-        }
+    objects(subject, predicate) {
+        return this.findMatches({subject, predicate})
+            .map(triple => triple.object);
     }
 
     /**
@@ -553,21 +552,54 @@ export default class Graph {
      * @param {RDFNode} predicate
      * The predicate to match.
      */
-    * literals(subject, predicate) {
+    literals(subject, predicate) {
         const s = toPrimitive(subject);
         const p = toPrimitive(predicate);
 
         if (!this.splo.has([s, p, true])) {
-            return;
+            return tortilla([]);
         }
 
-        const iterable = tortilla(this.splo.get([s, p, true]).values())
+        return tortilla(this.splo.get([s, p, true]).values())
             .filter(triple => triple.subject.equals(subject) &&
-                              triple.predicate.equals(predicate));
+                              triple.predicate.equals(predicate))
+            .map(triple => triple.object);
+    }
 
-        for (let {object: literal} of iterable) {
-            yield literal;
+    /**
+     * Checks if the graph includes any triples with the given subject and a
+     * literal as object.
+     *
+     * @param {RDFNode} subject
+     * The subject to match.
+     *
+     * @return {Boolean}
+     * The result of the test.
+     */
+    subjectHasLiterals(subject) {
+        for (let predicate of this.predicates(subject)) {
+            if (this.predicateHasLiterals(subject, predicate)) {
+                return true;
+            }
         }
+        return false;
+    }
+
+    /**
+     * Checks if the graph has any triples with the given subject and predicate
+     * and a literal as object.
+     *
+     * @param {RDFNode} subject
+     * The subject to match.
+     *
+     * @param {RDFNode} predicate
+     * The predicate to match.
+     *
+     * @return {Boolean}
+     * The result of the test.
+     */
+    predicateHasLiterals(subject, predicate) {
+        return !this.literals(subject, predicate).isEmpty();
     }
 
     /**

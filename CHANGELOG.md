@@ -1,8 +1,13 @@
 # Changelog
 
+## 1.6.0 (2016-06-07)
+
+* Added checks if a subject or subject/predicate-combination have literals.
+
 ## 1.5.0 (2016-06-06)
 
 * Added iterators for subject, predicates (given a subject) and objects (given subject and predicate).
+* Enhanced the TurtleWriter to use predicate and object list.
 
 ## 1.4.0 (2016-06-06)
 

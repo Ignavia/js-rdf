@@ -318,6 +318,20 @@ describe("Graph", function () {
         });
     });
 
+    describe("#subjectHasLiterals", function () {
+        it("should test if the subject has literals", function () {
+            expect(this.g0.subjectHasLiterals(this.n0)).to.be.true;
+            expect(this.g0.subjectHasLiterals(this.n2)).to.be.false;
+        });
+    });
+
+    describe("#predicateHasLiterals", function () {
+        it("should test if the subject and predicate have literals", function () {
+            expect(this.g0.predicateHasLiterals(this.n0, this.n2)).to.be.true;
+            expect(this.g0.predicateHasLiterals(this.n0, this.n0)).to.be.false;
+        });
+    });
+
     describe("#[Symbol.iterator]", function () {
         it("should yield all triples in the graph", function () {
             const r0 = [...this.g0];
