@@ -26,7 +26,11 @@ export default class TurtleWriter {
     serializeProfile(profile) {
         let result = "";
         for (let [prefix, ns] of profile.prefixes) {
-            result += `@prefix ${prefix}: <${ns}> .\n`;
+            if (prefix === "") {
+                result += `@base <${ns}> .\n`;
+            } else {
+                result += `@prefix ${prefix}: <${ns}> .\n`;
+            }
         }
         return result;
     }
@@ -164,6 +168,8 @@ export default class TurtleWriter {
             let shrunk   = profile.prefixes.shrink(expanded);
             if (expanded === shrunk) {
                 return `<${expanded}>`;
+            } else if (shrunk.startsWith(":")) {
+                return `<${shrunk.slice(1)}>`;
             } else {
                 return shrunk;
             }

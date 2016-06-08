@@ -70,7 +70,6 @@ SystemJS.config({
         "core-js": "npm:core-js@1.2.6",
         "events": "github:jspm/nodelibs-events@0.2.0-alpha",
         "fs": "github:jspm/nodelibs-fs@0.2.0-alpha",
-        "n3": "npm:n3@0.4.5",
         "net": "github:jspm/nodelibs-net@0.2.0-alpha",
         "path": "github:jspm/nodelibs-path@0.2.0-alpha",
         "process": "github:jspm/nodelibs-process@0.2.0-alpha",

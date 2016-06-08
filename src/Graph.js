@@ -478,16 +478,16 @@ export default class Graph {
                 candidates = this.osp.get([o, s]).values();
             }
         } else if (subject) {
-            if (this.splo.has(s)) {
-                candidates = this.splo.get(s).values();
+            if (this.splo.has([s])) {
+                candidates = this.splo.get([s]).values();
             }
         } else if (predicate) {
-            if (this.pos.has(p)) {
-                candidates = this.pos.get(p).values();
+            if (this.pos.has([p])) {
+                candidates = this.pos.get([p]).values();
             }
         } else if (object) {
-            if (this.osp.has(o)) {
-                candidates = this.osp.get(o).values();
+            if (this.osp.has([o])) {
+                candidates = this.osp.get([o]).values();
             }
         } else {
             candidates = this.splo.values();

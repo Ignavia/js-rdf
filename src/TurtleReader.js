@@ -1,4 +1,4 @@
-import n3, {Util as n3Util} from "n3";
+import n3, {Util as n3Util} from "./n3/N3.js";
 
 import Graph     from "./Graph.js";
 import Triple    from "./Triple.js";
@@ -128,7 +128,7 @@ export default class TurtleReader {
                     resolve({graph, profile});
                 }
             },
-            (prefix, iri) => {console.log(prefix, iri)
+            (prefix, iri) => {
                 profile.setPrefix(prefix, iri);
             }
         ));
