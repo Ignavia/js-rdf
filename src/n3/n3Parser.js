@@ -1,5 +1,5 @@
 // **N3Parser** parses N3 documents.
-var N3Lexer = require('./N3Lexer');
+import N3Lexer from "./n3Lexer.js";
 
 var RDF_PREFIX = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
     RDF_NIL    = RDF_PREFIX + 'nil',
@@ -11,7 +11,7 @@ var absoluteIRI = /^[a-z][a-z0-9+.-]*:/i,
     dotSegments = /(?:^|\/)\.\.?(?:$|[\/#?])/;
 
 // The next ID for new blank nodes
-var blankNodePrefix = 0, blankNodeCount = 0;
+var blankNodePrefix = 0, blankNodeCount = 0; // TODO: remove blank node prefix
 
 // ## Constructor
 function N3Parser(options) {
@@ -702,4 +702,4 @@ function noop() {}
 // ## Exports
 
 // Export the `N3Parser` class as a whole.
-module.exports = N3Parser;
+export default N3Parser;

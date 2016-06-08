@@ -356,4 +356,4 @@ N3Lexer.prototype = {
 // ## Exports
 
 // Export the `N3Lexer` class as a whole.
-module.exports = N3Lexer;
+export default N3Lexer;
