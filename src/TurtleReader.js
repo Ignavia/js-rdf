@@ -128,7 +128,7 @@ export default class TurtleReader {
                     resolve({graph, profile});
                 }
             },
-            (prefix, iri) => {
+            (prefix, iri) => {console.log(prefix, iri)
                 profile.setPrefix(prefix, iri);
             }
         ));
