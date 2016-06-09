@@ -19,8 +19,8 @@ export const xmlSchemaTypes = {
     int:                "http://www.w3.org/2001/XMLSchema#int",
     short:              "http://www.w3.org/2001/XMLSchema#short",
     byte:               "http://www.w3.org/2001/XMLSchema#byte",
-    unsingedLong:       "http://www.w3.org/2001/XMLSchema#unsignedLong",
+    unsignedLong:       "http://www.w3.org/2001/XMLSchema#unsignedLong",
     unsignedInt:        "http://www.w3.org/2001/XMLSchema#unsignedInt",
-    unsingedShort:      "http://www.w3.org/2001/XMLSchema#unsignedShort",
-    unsingedByte:       "http://www.w3.org/2001/XMLSchema#unsignedByte"
+    unsignedShort:      "http://www.w3.org/2001/XMLSchema#unsignedShort",
+    unsignedByte:       "http://www.w3.org/2001/XMLSchema#unsignedByte"
 };

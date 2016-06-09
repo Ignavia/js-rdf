@@ -71,13 +71,13 @@ export default class Literal extends RDFNode {
      * @param {Object} options
      * Contains the remaining parameters.
      *
-     * @param {String} [options.language=null]
+     * @param {String} [options.language]
      * The language of this literal.
      *
-     * @param {String} [options.datatype=null]
+     * @param {String} [options.datatype]
      * The datatype of this literal.
      */
-    constructor(value, {language = null, datatype = language === null ? xsd.string : langString} = {}) {
+    constructor(value, {language = null, datatype = xsd.string} = {}) {
         super("Literal", value);
 
         /**
@@ -92,7 +92,7 @@ export default class Literal extends RDFNode {
          *
          * @type {String}
          */
-        this.datatype = datatype;
+        this.datatype = language === null ? datatype : langString;
     }
 
     /**
@@ -101,9 +101,9 @@ export default class Literal extends RDFNode {
     equals(toCompare) {
         if (toCompare instanceof RDFNode) {
             return this.interfaceName === toCompare.interfaceName &&
-                    this.nominalValue === toCompare.nominalValue  &&
-                    this.language     === toCompare.language &&
-                    (this.datatype    === toCompare.datatype || this.language !== null);
+                   this.nominalValue  === toCompare.nominalValue  &&
+                   this.language      === toCompare.language      &&
+                  (this.datatype      === toCompare.datatype || this.language !== null);
         }
         return toPrimitive(this) === toPrimitive(toCompare);
     }
