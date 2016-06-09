@@ -107,7 +107,7 @@ export default class PrefixMap {
      * @see https://www.w3.org/TR/rdf-interfaces/#widl-PrefixMap-resolve-DOMString-DOMString-curie
      */
     resolve(curie) {
-        const [prefix, name] = curie.split(":");
+        const [prefix, name = ""] = curie.split(":");
         const ns = this.prefixToNamespace.convertXToY(prefix)[0];
         if (ns) {
             return ns + name;
