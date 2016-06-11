@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.7.0 (2016-06-11)
+
+* Added the option to use IDs instead of nodes and triples where applicable.
+
 ## 1.6.0 (2016-06-07)
 
 * Added checks if a subject or subject/predicate-combination have literals.
