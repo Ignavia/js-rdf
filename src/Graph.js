@@ -1,6 +1,8 @@
 import {EventManager, IDGenerator, GumpMap, observableExtendedMixin, tortilla} from "@ignavia/util";
 
 import Literal from "./Literal.js";
+import RDFNode from "./RDFNode.js";
+import Triple  from "./Triple.js";
 
 /**
  * Provides IDs for graphs.
@@ -56,6 +58,40 @@ function isLiteral(v) {
  * @see https://www.w3.org/TR/rdf-interfaces/#graphs
  */
 export default class Graph {
+
+    /**
+     * A helper function to turn a triple or its ID into an ID.
+     *
+     * @param {String|Triple} triple
+     * The triple or its ID.
+     *
+     * @return {String}
+     * The requested ID.
+     */
+    static toTripleId(triple) {
+        if (typeof triple === "string") {
+            return triple;
+        } else if (triple instanceof Triple) {
+            return triple.id;
+        }
+    }
+
+    /**
+     * A helper function to turn a node or its ID into an ID.
+     *
+     * @param {String|RDFNode} node
+     * The node or its ID.
+     *
+     * @return {String}
+     * The requested ID.
+     */
+    static toNodeId(node) {
+        if (typeof node === "string") {
+            return node;
+        } else if (node instanceof RDFNode) {
+            return node.id;
+        }
+    }
 
     /**
      * @param {Array} [initialValues=[]]
@@ -218,13 +254,15 @@ export default class Graph {
     /**
      * Returns an iterable for all matching nodes in this graph.
      *
-     * @param {RDFNode} node
-     * The node to match.
+     * @param {RDFNode|String} node
+     * The node to match. Its ID is enough.
      *
      * @return {TortillaWrapper}
      * An iterable for all matching nodes.
      */
     iterEquivalentNodes(node) {
+        node = this.toNodeObj(node);
+
         return tortilla(this.nodes.values())
             .map(   v => v.node)
             .filter(n => n.equals(node));
@@ -233,13 +271,15 @@ export default class Graph {
     /**
      * Returns an iterable for all matching triples in this graph.
      *
-     * @param {Triple} triple
-     * The triple to match.
+     * @param {Triple|String} triple
+     * The triple to match. Its ID is enough.
      *
      * @return {TortillaWrapper}
      * An iterable for all matching triples.
      */
     iterEquivalentTriples(triple) {
+        triple = this.toTripleObj(triple);
+
         const p = toPrimitive(triple.predicate);
         const o = toPrimitive(triple.object);
         const s = toPrimitive(triple.subject);
@@ -276,8 +316,8 @@ export default class Graph {
     /**
      * Removes the given triple from this graph.
      *
-     * @param {Triple} triple
-     * The triple to remove.
+     * @param {Triple|String} triple
+     * The triple to remove. Its ID is enough.
      *
      * @return {Graph}
      * This graph to make the method chainable.
@@ -285,6 +325,8 @@ export default class Graph {
      * @see https://www.w3.org/TR/rdf-interfaces/#widl-Graph-remove-Graph-Triple-triple
      */
     remove(triple) {
+        triple = this.toTripleObj(triple);
+
         const matching = this.iterEquivalentTriples(triple);
 
         if (!matching.isEmpty()) {
@@ -319,6 +361,8 @@ export default class Graph {
      *
      * @param {RDFNode} node
      * The node to remove.
+     *
+     * @private
      */
     removeNodeFromIdMap(node) {
         const count = this.nodes.get(node.id).count - 1;
@@ -514,10 +558,12 @@ export default class Graph {
     /**
      * Yields the predicates of all triples with the given subject.
      *
-     * @param {RDFNode} subject
-     * The subject to match.
+     * @param {RDFNode|String} subject
+     * The subject to match. Its ID is enough.
      */
     * predicates(subject) {
+        subject = this.toNodeObj(subject);
+
         const visited = new Set();
 
         for (let {predicate} of this.findMatches({subject})) {
@@ -532,13 +578,16 @@ export default class Graph {
     /**
      * Yields the objects of all triples with the given subject and predicate.
      *
-     * @param {RDFNode} subject
-     * The subject to match.
+     * @param {RDFNode|String} subject
+     * The subject to match. Its ID is enough.
      *
-     * @param {RDFNode} predicate
-     * The predicate to match.
+     * @param {RDFNode|String} predicate
+     * The predicate to match. Its ID is enough.
      */
     objects(subject, predicate) {
+        subject   = this.toNodeObj(subject);
+        predicate = this.toNodeObj(predicate);
+
         return this.findMatches({subject, predicate})
             .map(triple => triple.object);
     }
@@ -546,13 +595,16 @@ export default class Graph {
     /**
      * Yields the literals of all triples with the given subject and predicate.
      *
-     * @param {RDFNode} subject
-     * The subject to match.
+     * @param {RDFNode|String} subject
+     * The subject to match. Its ID is enough.
      *
-     * @param {RDFNode} predicate
-     * The predicate to match.
+     * @param {RDFNode|String} predicate
+     * The predicate to match. Its ID is enough.
      */
     literals(subject, predicate) {
+        subject   = this.toNodeObj(subject);
+        predicate = this.toNodeObj(predicate);
+
         const s = toPrimitive(subject);
         const p = toPrimitive(predicate);
 
@@ -570,13 +622,15 @@ export default class Graph {
      * Checks if the graph includes any triples with the given subject and a
      * literal as object.
      *
-     * @param {RDFNode} subject
-     * The subject to match.
+     * @param {RDFNode|String} subject
+     * The subject to match. Its ID is enough.
      *
      * @return {Boolean}
      * The result of the test.
      */
     subjectHasLiterals(subject) {
+        subject = this.toNodeObj(subject);
+
         for (let predicate of this.predicates(subject)) {
             if (this.predicateHasLiterals(subject, predicate)) {
                 return true;
@@ -589,16 +643,19 @@ export default class Graph {
      * Checks if the graph has any triples with the given subject and predicate
      * and a literal as object.
      *
-     * @param {RDFNode} subject
-     * The subject to match.
+     * @param {RDFNode|String} subject
+     * The subject to match. Its ID is enough.
      *
-     * @param {RDFNode} predicate
-     * The predicate to match.
+     * @param {RDFNode|String} predicate
+     * The predicate to match. Its ID is enough.
      *
      * @return {Boolean}
      * The result of the test.
      */
     predicateHasLiterals(subject, predicate) {
+        subject   = this.toNodeObj(subject);
+        predicate = this.toNodeObj(predicate);
+
         return !this.literals(subject, predicate).isEmpty();
     }
 
@@ -732,6 +789,40 @@ export default class Graph {
             result += triple.toString() + " .\n";
         }
         return result;
+    }
+
+    /**
+     * A helper function to turn a triple or its ID into a triple object.
+     *
+     * @param {String|Triple} triple
+     * The triple to get or its ID.
+     *
+     * @return {Triple}
+     * The requested triple.
+     */
+    toTripleObj(triple) {
+        if (typeof triple === "string") {
+            return this.getTripleById(triple);
+        } else if (triple instanceof Triple) {
+            return triple;
+        }
+    }
+
+    /**
+     * A helper function to turn a node or its ID into a node object.
+     *
+     * @param {String|RDFNode} node
+     * The node to get or its ID.
+     *
+     * @return {RDFNode}
+     * The requested node.
+     */
+    toNodeObj(node) {
+        if (typeof node === "string") {
+            return this.getNodeById(node);
+        } else if (node instanceof RDFNode) {
+            return node;
+        }
     }
 }
 
