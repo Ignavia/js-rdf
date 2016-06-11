@@ -4,36 +4,37 @@ SystemJS.config({
     },
     devConfig: {
         "map": {
-            "babel-plugin-transform-export-extensions": "npm:babel-plugin-transform-export-extensions@6.5.0",
-            "babel-plugin-transform-function-bind": "npm:babel-plugin-transform-function-bind@6.5.2",
+            "babel-plugin-transform-export-extensions": "npm:babel-plugin-transform-export-extensions@6.8.0",
+            "babel-plugin-transform-function-bind": "npm:babel-plugin-transform-function-bind@6.8.0",
             "plugin-babel": "npm:systemjs-plugin-babel@0.0.2"
         },
         "packages": {
-            "npm:babel-plugin-syntax-export-extensions@6.5.0": {
+            "npm:babel-plugin-transform-function-bind@6.8.0": {
                 "map": {
-                    "babel-runtime": "npm:babel-runtime@5.8.38"
+                    "babel-plugin-syntax-function-bind": "npm:babel-plugin-syntax-function-bind@6.8.0",
+                    "babel-runtime": "npm:babel-runtime@6.9.2"
                 }
             },
-            "npm:babel-plugin-syntax-function-bind@6.5.0": {
+            "npm:babel-plugin-transform-export-extensions@6.8.0": {
                 "map": {
-                    "babel-runtime": "npm:babel-runtime@5.8.38"
+                    "babel-runtime": "npm:babel-runtime@6.9.2",
+                    "babel-plugin-syntax-export-extensions": "npm:babel-plugin-syntax-export-extensions@6.8.0"
                 }
             },
-            "npm:babel-plugin-transform-export-extensions@6.5.0": {
+            "npm:babel-plugin-syntax-function-bind@6.8.0": {
                 "map": {
-                    "babel-plugin-syntax-export-extensions": "npm:babel-plugin-syntax-export-extensions@6.5.0",
-                    "babel-runtime": "npm:babel-runtime@5.8.38"
+                    "babel-runtime": "npm:babel-runtime@6.9.2"
                 }
             },
-            "npm:babel-plugin-transform-function-bind@6.5.2": {
+            "npm:babel-plugin-syntax-export-extensions@6.8.0": {
                 "map": {
-                    "babel-plugin-syntax-function-bind": "npm:babel-plugin-syntax-function-bind@6.5.0",
-                    "babel-runtime": "npm:babel-runtime@5.8.38"
+                    "babel-runtime": "npm:babel-runtime@6.9.2"
                 }
             },
-            "npm:babel-runtime@5.8.38": {
+            "npm:babel-runtime@6.9.2": {
                 "map": {
-                    "core-js": "npm:core-js@1.2.6"
+                    "core-js": "npm:core-js@2.4.0",
+                    "regenerator-runtime": "npm:regenerator-runtime@0.9.5"
                 }
             }
         }
@@ -65,7 +66,7 @@ SystemJS.config({
         "github:*/*.json"
     ],
     map: {
-        "@ignavia/util": "npm:@ignavia/util@1.2.4",
+        "@ignavia/util": "npm:@ignavia/util@1.3.3",
         "buffer": "github:jspm/nodelibs-buffer@0.2.0-alpha",
         "core-js": "npm:core-js@1.2.6",
         "events": "github:jspm/nodelibs-events@0.2.0-alpha",
@@ -80,7 +81,7 @@ SystemJS.config({
     packages: {
         "github:jspm/nodelibs-buffer@0.2.0-alpha": {
             "map": {
-                "buffer-browserify": "npm:buffer@4.5.1"
+                "buffer-browserify": "npm:buffer@4.6.0"
             }
         },
         "github:jspm/nodelibs-stream@0.2.0-alpha": {
@@ -88,32 +89,33 @@ SystemJS.config({
                 "stream-browserify": "npm:stream-browserify@2.0.1"
             }
         },
-        "npm:@ignavia/util@1.2.4": {
-            "map": {
-                "lodash": "npm:lodash@4.8.2"
-            }
-        },
-        "npm:buffer@4.5.1": {
-            "map": {
-                "base64-js": "npm:base64-js@1.1.2",
-                "ieee754": "npm:ieee754@1.1.6",
-                "isarray": "npm:isarray@1.0.0"
-            }
-        },
-        "npm:readable-stream@2.0.6": {
-            "map": {
-                "core-util-is": "npm:core-util-is@1.0.2",
-                "inherits": "npm:inherits@2.0.1",
-                "isarray": "npm:isarray@1.0.0",
-                "process-nextick-args": "npm:process-nextick-args@1.0.6",
-                "string_decoder": "npm:string_decoder@0.10.31",
-                "util-deprecate": "npm:util-deprecate@1.0.2"
-            }
-        },
         "npm:stream-browserify@2.0.1": {
             "map": {
                 "inherits": "npm:inherits@2.0.1",
-                "readable-stream": "npm:readable-stream@2.0.6"
+                "readable-stream": "npm:readable-stream@2.1.4"
+            }
+        },
+        "npm:@ignavia/util@1.3.3": {
+            "map": {
+                "lodash": "npm:lodash@4.13.1"
+            }
+        },
+        "npm:buffer@4.6.0": {
+            "map": {
+                "isarray": "npm:isarray@1.0.0",
+                "base64-js": "npm:base64-js@1.1.2",
+                "ieee754": "npm:ieee754@1.1.6"
+            }
+        },
+        "npm:readable-stream@2.1.4": {
+            "map": {
+                "inherits": "npm:inherits@2.0.1",
+                "isarray": "npm:isarray@1.0.0",
+                "buffer-shims": "npm:buffer-shims@1.0.0",
+                "core-util-is": "npm:core-util-is@1.0.2",
+                "process-nextick-args": "npm:process-nextick-args@1.0.7",
+                "string_decoder": "npm:string_decoder@0.10.31",
+                "util-deprecate": "npm:util-deprecate@1.0.2"
             }
         }
     }
