@@ -269,6 +269,13 @@ export default class Graph {
     }
 
     /**
+     * Yields the nodes in the graph.
+     */
+    iterNodes() {
+        return this.nodes.values();
+    }
+
+    /**
      * Returns an iterable for all matching triples in this graph.
      *
      * @param {Triple|String} triple

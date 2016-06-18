@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.8.0 (2016-06-18)
+
+* Added a method to loop over the nodes in the graph.
+
 ## 1.7.0 (2016-06-11)
 
 * Added the option to use IDs instead of nodes and triples where applicable.
