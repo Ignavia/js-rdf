@@ -285,7 +285,8 @@ export default class Graph {
      * Yields the nodes in the graph.
      */
     iterNodes() {
-        return this.nodes.values();
+        return tortilla(this.nodes.values())
+            .map(v => v.node);
     }
 
     /**
