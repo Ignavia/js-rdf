@@ -25,8 +25,8 @@ describe("Graph", function () {
 
     describe("#constructor", function () {
         it("should add the given triples to the graph", function () {
-            expect(this.g0.has(this.t2)).to.be.true;
-            expect(this.g0.has(this.t4)).to.be.false;
+            expect(this.g0.hasTriple(this.t2)).to.be.true;
+            expect(this.g0.hasTriple(this.t4)).to.be.false;
             expect(this.g0.length).to.equal(3);
         });
     });
@@ -34,7 +34,7 @@ describe("Graph", function () {
     describe("#add", function () {
         it("should add the triple to the graph", function () {
             this.g0.add(this.t4);
-            expect(this.g0.has(this.t4)).to.be.true;
+            expect(this.g0.hasTriple(this.t4)).to.be.true;
             expect(this.g0.length).to.equal(4);
         });
 
@@ -54,15 +54,15 @@ describe("Graph", function () {
     describe("#addAll", function () {
         it("should add all triples from the given graph", function () {
             this.g0.addAll(this.g1);
-            expect(this.g0.has(this.t4)).to.be.true;
+            expect(this.g0.hasTriple(this.t4)).to.be.true;
             expect(this.g0.length).to.equal(4);
         });
     });
 
-    describe("#has", function () {
+    describe("#hasTriple", function () {
         it("should test if a triple or an equivalent one exists", function () {
-            expect(this.g0.has(this.t0)).to.be.true;
-            expect(this.g0.has(this.t2)).to.be.true;
+            expect(this.g0.hasTriple(this.t0)).to.be.true;
+            expect(this.g0.hasTriple(this.t2)).to.be.true;
         });
     });
 
@@ -106,8 +106,8 @@ describe("Graph", function () {
     describe("#remove", function () {
         it("should remove the given triple", function () {
             this.g0.remove(this.t2);
-            expect(this.g0.has(this.t0)).to.be.false;
-            expect(this.g0.has(this.t2)).to.be.false;
+            expect(this.g0.hasTriple(this.t0)).to.be.false;
+            expect(this.g0.hasTriple(this.t2)).to.be.false;
             expect(this.g0.length).to.equal(2);
         });
 
@@ -132,37 +132,37 @@ describe("Graph", function () {
 
         it("should remove only triple with matching subjects (RDFNode)", function () {
             this.g0.removeMatches({subject: new BlankNode("b1")});
-            expect(this.g0.has(this.t1)).to.be.true;
+            expect(this.g0.hasTriple(this.t1)).to.be.true;
             expect(this.g0.length).to.equal(1);
         });
 
         it("should remove only triples with matching predicates (string)", function () {
             this.g0.removeMatches({predicate: "n1"});
-            expect(this.g0.has(this.t3)).to.be.true;
+            expect(this.g0.hasTriple(this.t3)).to.be.true;
             expect(this.g0.length).to.equal(1);
         });
 
         it("should remove only triples with matching predicates (RDFNode)", function () {
             this.g0.removeMatches({predicate: new NamedNode("n1")});
-            expect(this.g0.has(this.t3)).to.be.true;
+            expect(this.g0.hasTriple(this.t3)).to.be.true;
             expect(this.g0.length).to.equal(1);
         });
 
         it("should remove only triples with matching objects (string)", function () {
             this.g0.removeMatches({object: "l1"});
-            expect(this.g0.has(this.t1)).to.be.true;
+            expect(this.g0.hasTriple(this.t1)).to.be.true;
             expect(this.g0.length).to.equal(2);
         });
 
         it("should remove only triples with matching objects (integer)", function () {
             this.g0.removeMatches({object: 1});
-            expect(this.g0.has(this.t0)).to.be.true;
+            expect(this.g0.hasTriple(this.t0)).to.be.true;
             expect(this.g0.length).to.equal(2);
         });
 
         it("should remove only triples with matching objects (RDFNode)", function () {
             this.g0.removeMatches({object: new NamedNode("n1")});
-            expect(this.g0.has(this.t0)).to.be.true;
+            expect(this.g0.hasTriple(this.t0)).to.be.true;
             expect(this.g0.length).to.equal(2);
         });
     });
@@ -171,8 +171,8 @@ describe("Graph", function () {
         it("should return a new graph containing the triples from both graphs", function () {
             const r0 = this.g0.merge(this.g1);
 
-            expect(r0.has(this.t0)).to.be.true;
-            expect(r0.has(this.t4)).to.be.true;
+            expect(r0.hasTriple(this.t0)).to.be.true;
+            expect(r0.hasTriple(this.t4)).to.be.true;
             expect(r0.length).to.equal(4);
         });
 
@@ -187,47 +187,47 @@ describe("Graph", function () {
     describe("#match", function () {
         it("should include only triple with matching subjects (string)", function () {
             const r0 = this.g0.match({subject: "b1"});
-            expect(r0.has(this.t0)).to.be.true;
-            expect(r0.has(this.t1)).to.be.true;
+            expect(r0.hasTriple(this.t0)).to.be.true;
+            expect(r0.hasTriple(this.t1)).to.be.true;
             expect(r0.length).to.equal(3);
         });
 
         it("should include only triple with matching subjects (RDFNode)", function () {
             const r0 = this.g0.match({subject: new BlankNode("b1")});
-            expect(r0.has(this.t0)).to.be.true;
-            expect(r0.has(this.t1)).to.be.false;
+            expect(r0.hasTriple(this.t0)).to.be.true;
+            expect(r0.hasTriple(this.t1)).to.be.false;
             expect(r0.length).to.equal(2);
         });
 
         it("should include only triples with matching predicates (string)", function () {
             const r0 = this.g0.match({predicate: "n1"});
-            expect(r0.has(this.t0)).to.be.true;
-            expect(r0.has(this.t1)).to.be.true;
+            expect(r0.hasTriple(this.t0)).to.be.true;
+            expect(r0.hasTriple(this.t1)).to.be.true;
             expect(r0.length).to.equal(2);
         });
 
         it("should include only triples with matching predicates (RDFNode)", function () {
             const r0 = this.g0.match({predicate: new NamedNode("n1")});
-            expect(r0.has(this.t0)).to.be.true;
-            expect(r0.has(this.t1)).to.be.true;
+            expect(r0.hasTriple(this.t0)).to.be.true;
+            expect(r0.hasTriple(this.t1)).to.be.true;
             expect(r0.length).to.equal(2);
         });
 
         it("should include only triples with matching objects (string)", function () {
             const r0 = this.g0.match({object: "l1"});
-            expect(r0.has(this.t0)).to.be.true;
+            expect(r0.hasTriple(this.t0)).to.be.true;
             expect(r0.length).to.equal(1);
         });
 
         it("should include only triples with matching objects (integer)", function () {
             const r0 = this.g0.match({object: 1});
-            expect(r0.has(this.t1)).to.be.true;
+            expect(r0.hasTriple(this.t1)).to.be.true;
             expect(r0.length).to.equal(1);
         });
 
         it("should include only triples with matching objects (RDFNode)", function () {
             const r0 = this.g0.match({object: new NamedNode("n1")});
-            expect(r0.has(this.t3)).to.be.true;
+            expect(r0.hasTriple(this.t3)).to.be.true;
             expect(r0.length).to.equal(1);
         });
     });
@@ -249,8 +249,8 @@ describe("Graph", function () {
     describe("#filter", function () {
         it("should return a graph containing only matching triples", function () {
             const r0 = this.g0.filter(t => t.subject.interfaceName === "BlankNode");
-            expect(r0.has(this.t0)).to.be.true;
-            expect(r0.has(this.t3)).to.be.true;
+            expect(r0.hasTriple(this.t0)).to.be.true;
+            expect(r0.hasTriple(this.t3)).to.be.true;
             expect(r0.length).to.equal(2);
         });
 

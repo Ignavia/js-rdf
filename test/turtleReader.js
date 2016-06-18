@@ -23,9 +23,9 @@ describe("TurtleReader", function () {
             const t2 = new Triple(new BlankNode("b1"), new NamedNode("n2"), new Literal("l1", {language: "en"}));
             try {
                 const {graph, profile} = await this.reader.parse(this.s0);
-                expect(graph.has(t0)).to.be.true;
-                expect(graph.has(t1)).to.be.true;
-                expect(graph.has(t2)).to.be.true;
+                expect(graph.hasTriple(t0)).to.be.true;
+                expect(graph.hasTriple(t1)).to.be.true;
+                expect(graph.hasTriple(t2)).to.be.true;
                 expect(graph.length).to.equal(3);
 
                 const prefixes = profile.prefixes;

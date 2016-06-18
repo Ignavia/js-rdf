@@ -181,7 +181,7 @@ export default class Graph {
      * @see https://www.w3.org/TR/rdf-interfaces/#widl-Graph-add-Graph-Triple-triple
      */
     add(triple) {
-        if (!this.has(triple)) {
+        if (!this.hasTriple(triple)) {
             const s = toPrimitive(triple.subject);
             const l = isLiteral(triple.object);
             const p = toPrimitive(triple.predicate);
@@ -239,6 +239,19 @@ export default class Graph {
     }
 
     /**
+     * Tests if the given node or an equivalent one exists in this graph.
+     *
+     * @param {RDFNode} node
+     * The node to test.
+     *
+     * @return {Boolean}
+     * Whether the node exists already.
+     */
+    hasNode(node) {
+        return !this.iterEquivalentNodes(node).isEmpty();
+    }
+
+    /**
      * Tests if the given triple or an equivalent one exists in this graph.
      *
      * @param {Triple} triple
@@ -247,7 +260,7 @@ export default class Graph {
      * @return {Boolean}
      * Whether the triple exists already.
      */
-    has(triple) {
+    hasTriple(triple) {
         return !this.iterEquivalentTriples(triple).isEmpty();
     }
 
