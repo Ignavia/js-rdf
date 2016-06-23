@@ -4,7 +4,7 @@ chai.use(sinonChai);
 
 import sinon from "sinon";
 
-import {Graph, Triple, BlankNode, NamedNode, Literal, xmlSchemaTypes as xsd} from "../src/rdf.js";
+import {Graph, Triple, BlankNode, NamedNode, Literal, xmlSchemaTypes as xsd} from "../src/index.js";
 
 describe("Graph", function () {
     beforeEach(function () {

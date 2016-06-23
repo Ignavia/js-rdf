@@ -42,9 +42,8 @@ SystemJS.config({
     transpiler: "plugin-babel",
     packages: {
         "@ignavia/rdf": {
-            "main": "rdf.js",
+            "main": "index.js",
             "format": "esm",
-            "defaultExtension": "js",
             "meta": {
                 "*js": {
                     "babelOptions": {

@@ -1,6 +1,6 @@
 import {expect} from "chai";
 
-import {BlankNode, Literal, NamedNode, xmlSchemaTypes as xsd} from "../src/rdf.js";
+import {BlankNode, Literal, NamedNode, xmlSchemaTypes as xsd} from "../src/index.js";
 
 describe("Literal", function () {
     describe("#equals", function () {

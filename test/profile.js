@@ -1,6 +1,6 @@
 import {expect} from "chai";
 
-import {BlankNode, Literal, NamedNode, Profile, PrefixMap, TermMap} from "../src/rdf.js";
+import {BlankNode, Literal, NamedNode, Profile, PrefixMap, TermMap} from "../src/index.js";
 
 describe("PrefixMap", function () {
     beforeEach(function () {

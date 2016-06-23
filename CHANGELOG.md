@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.1.0 (2016-06-23)
+
+* Added a factory method to the RDFNode class to create instances using their N-Triples serialization.
+* Added getters to the BlankNode, Literal and NamedNode class for their nominal values.
+
 ## 2.0.0 (2016-06-18)
 
 * Added a method to test if a node or an equivalent one exists in the graph.

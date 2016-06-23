@@ -29,6 +29,7 @@ function toPrimitive(v) {
 /**
  * Lists how to convert a string to a specific datatype.
  *
+ * @type {object}
  * @ignore
  */
 const converter = {
@@ -55,6 +56,12 @@ const converter = {
     [xsd.unsignedByte]:       Number
 };
 
+/**
+ * The IRI of the langString datatype.
+ *
+ * @type {string}
+ * @ignore
+ */
 const langString = "http://www.w3.org/1999/02/22-rdf-syntax-ns#langString";
 
 /**
@@ -63,6 +70,52 @@ const langString = "http://www.w3.org/1999/02/22-rdf-syntax-ns#langString";
  * @see https://www.w3.org/TR/rdf-interfaces/#literals
  */
 export default class Literal extends RDFNode {
+
+    /**
+     * Creates a literal from an N-Triples string.
+     *
+     * @param {String} ntString
+     * The N-Triples string to parse.
+     *
+     * @return {Literal}
+     * The created literal.
+     *
+     * @throws
+     * If the string cannot be parsed.
+     */
+    static fromNT(ntString) {
+        const normalRegex   = /^"(.*)"$/;
+        const languageRegex = /^"(.*)"@(.*)$/;
+        const datatypeRegex = /^"(.*)"\^\^<(.*)>$/;
+
+        if (normalRegex.test(ntString)) {
+            const [, value] = normalRegex.exec(ntString);
+            return new Literal(value);
+        } else if (languageRegex.test(ntString)) {
+            const [, value, language] = languageRegex.exec(ntString);
+            return new Literal(value, {language});
+        } else if (datatypeRegex.test(ntString)) {
+            const [, value, datatype] = datatypeRegex.exec(ntString);
+            return new Literal(value, {datatype});
+        } else {
+            throw new Error(`Could not parse ${ntString}.`);
+        }
+    }
+
+    /**
+     * Checks if the given string is a serialized literal in the N-Triples
+     * format.
+     *
+     * @param {string} s
+     * The string to check.
+     *
+     * @return {Boolean}
+     * The result of the test.
+     */
+    static isNTLiteral(s) {
+        const regex = /^".*"(?:@.*|\^\^<.*>)?$/;
+        return regex.test(s);
+    }
 
     /**
      * @param {String} value
@@ -93,6 +146,13 @@ export default class Literal extends RDFNode {
          * @type {String}
          */
         this.datatype = language === null ? datatype : langString;
+    }
+
+    /**
+     * The value of this literal.
+     */
+    get value() {
+        return this.nominalValue;
     }
 
     /**

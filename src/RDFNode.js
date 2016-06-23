@@ -1,5 +1,9 @@
 import {IDGenerator} from "@ignavia/util";
 
+// import BlankNode from "./BlankNode.js";
+// import Literal   from "./Literal.js";
+// import NamedNode from "./NamedNode.js";
+
 /**
  * Provides IDs for RDFNodes.
  *
@@ -14,6 +18,30 @@ const idGenerator = new IDGenerator("n");
  * @see https://www.w3.org/TR/rdf-interfaces/#nodes
  */
 export default class RDFNode {
+
+    // /**
+    //  * Creates an appropriate RDFNode for an N-Triples string.
+    //  *
+    //  * @param {String} ntString
+    //  * The N-Triples string to parse.
+    //  *
+    //  * @return {RDFNode}
+    //  * The created RDFNode.
+    //  *
+    //  * @throws
+    //  * If the string cannot be parsed.
+    //  */
+    // static fromNT(ntString) {
+    //     if (BlankNode.isNTBlankNode(ntString)) {
+    //         return BlankNode.fromNT(ntString);
+    //     } else if (Literal.isNTLiteral(ntString)) {
+    //         return Literal.fromNT(ntString);
+    //     } else if (NamedNode.isNTNamedNode(ntString)) {
+    //         return NamedNode.fromNT(ntString);
+    //     } else {
+    //         throw new Error(`Could not parse ${ntString}.`);
+    //     }
+    // }
 
     /**
      * @param {String} interfaceName

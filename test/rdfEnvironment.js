@@ -1,6 +1,6 @@
 import {expect} from "chai";
 
-import {RDFEnvironment, BlankNode, NamedNode} from "../src/rdf.js";
+import {RDFEnvironment, BlankNode, NamedNode} from "../src/index.js";
 
 describe("RDFEnvironment", function () {
     beforeEach(function () {

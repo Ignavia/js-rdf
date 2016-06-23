@@ -1,6 +1,6 @@
 import {expect} from "chai";
 
-import {Graph, Triple, BlankNode, NamedNode, Literal, xmlSchemaTypes as xsd, TurtleWriter} from "../src/rdf.js";
+import {Graph, Triple, BlankNode, NamedNode, Literal, xmlSchemaTypes as xsd, TurtleWriter} from "../src/index.js";
 
 describe("TurtleWriter", function () {
     beforeEach(function () {

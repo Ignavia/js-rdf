@@ -19,7 +19,7 @@
     "url": "https://github.com/Ignavia/js-rdf.git"
   },
   "scripts": {
-    "build": "jspm build ./src/rdf.js - @ignavia/util ./dist/rdf.js --format cjs --skip-source-maps --minify",
+    "build": "jspm build ./src/index.js - @ignavia/util ./dist/rdf.js --format cjs --skip-source-maps --minify",
     "doc": "esdoc -c esdoc.json",
     "test": "mocha --compilers js:babel-register"
   },

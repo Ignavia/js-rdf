@@ -1,6 +1,6 @@
 import {expect} from "chai";
 
-import {BlankNode, Literal, NamedNode} from "../src/rdf.js";
+import {BlankNode, Literal, NamedNode} from "../src/index.js";
 
 describe("NamedNode", function () {
     describe("#equals", function () {

@@ -1,6 +1,6 @@
 import {expect} from "chai";
 
-import {TermMap} from "../src/rdf.js";
+import {TermMap} from "../src/index.js";
 
 describe("TermMap", function () {
     beforeEach(function () {

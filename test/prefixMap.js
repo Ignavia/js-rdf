@@ -1,6 +1,6 @@
 import {expect} from "chai";
 
-import {PrefixMap} from "../src/rdf.js";
+import {PrefixMap} from "../src/index.js";
 
 describe("PrefixMap", function () {
     beforeEach(function () {
