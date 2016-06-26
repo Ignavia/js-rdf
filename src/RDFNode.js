@@ -77,6 +77,36 @@ export default class RDFNode {
     }
 
     /**
+     * Tests if this node is a blank node.
+     *
+     * @return {boolean}
+     * If this node is a blank node.
+     */
+    isBlankNode() {
+        return this.interfaceName === "BlankNode";
+    }
+
+    /**
+     * Tests if this node is a literal.
+     *
+     * @return {boolean}
+     * If this node is a literal.
+     */
+    isLiteral() {
+        return this.interfaceName === "Literal";
+    }
+
+    /**
+     * Tests if this node is a named node.
+     *
+     * @return {boolean}
+     * If this node is a named node.
+     */
+    isNamedNode() {
+        return this.interfaceName === "NamedNode";
+    }
+
+    /**
      * Tests if this RDFNode is equivalent to the given value.
      *
      * @param {*} toCompare

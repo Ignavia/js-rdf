@@ -1,9 +1,13 @@
 # Changelog
 
+## 2.2.0 (2016-06-26)
+
+* Added tests if an RDFNode is a blank node, literal or named node.
+
 ## 2.1.0 (2016-06-23)
 
 * Added a factory method to the RDFNode class to create instances using their N-Triples serialization.
-* Added getters to the BlankNode, Literal and NamedNode class for their nominal values.
+* Added getters to the BlankNode, Literal and NamedNode classes for their nominal values.
 
 ## 2.0.0 (2016-06-18)
 
