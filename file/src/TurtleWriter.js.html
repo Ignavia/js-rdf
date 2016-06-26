@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../">
+  <title data-ice="title">src/TurtleWriter.js | JavaScript RDF API Document</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  
+  
+  <script src="script/manual.js"></script>
+</head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  <a href="./manual/index.html" data-ice="manualHeaderLink">Manual</a>
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <a data-ice="repoURL" href="https://github.com/Ignavia/js-rdf.git" class="repo-url-github">Repository</a>
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/BlankNode.js~BlankNode.html">BlankNode</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/Graph.js~Graph.html">Graph</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/Literal.js~Literal.html">Literal</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/NamedNode.js~NamedNode.html">NamedNode</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/PrefixMap.js~PrefixMap.html">PrefixMap</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/Profile.js~Profile.html">Profile</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/RDFEnvironment.js~RDFEnvironment.html">RDFEnvironment</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/RDFNode.js~RDFNode.html">RDFNode</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/TermMap.js~TermMap.html">TermMap</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/Triple.js~Triple.html">Triple</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/TurtleReader.js~TurtleReader.html">TurtleReader</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/TurtleWriter.js~TurtleWriter.html">TurtleWriter</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-xmlSchemaTypes">xmlSchemaTypes</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">n3</div><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-N3Lexer">N3Lexer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-N3Parser">N3Parser</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">src/TurtleWriter.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import Profile from &quot;./Profile.js&quot;;
+
+/**
+ * Transforms a graph into a Turtle string.
+ *
+ * @see https://www.w3.org/TR/rdf-interfaces/#data-serializers
+ */
+export default class TurtleWriter {
+
+    /**
+     *
+     */
+    constructor() {}
+
+    /**
+     * Serializes the given profile.
+     *
+     * @param {Profile} profile
+     * The profile to serialize.
+     *
+     * @return {String}
+     * The result.
+     *
+     * @private
+     */
+    serializeProfile(profile) {
+        let result = &quot;&quot;;
+        for (let [prefix, ns] of profile.prefixes) {
+            if (prefix === &quot;&quot;) {
+                result += `@base &lt;${ns}&gt; .\n`;
+            } else {
+                result += `@prefix ${prefix}: &lt;${ns}&gt; .\n`;
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Serializes the given graph.
+     *
+     * @param {Graph} graph
+     * The graph to serialize.
+     *
+     * @param {Profile} profile
+     * The profile used to shorten the IRIs of named nodes.
+     *
+     * @return {String}
+     * The result.
+     *
+     * @private
+     */
+    serializeGraph(graph, profile) {
+        let result = &quot;&quot;;
+
+        for (let subject of graph.subjects()) {
+            const nodeString          = this.serializeNode(profile, subject) + &quot; &quot;;
+            const predicateListString = this.serializePredicateList(
+                graph,
+                profile,
+                subject,
+                nodeString.length
+            );
+            result += nodeString + predicateListString + &quot;.\n&quot;;
+        }
+
+        return result;
+    }
+
+    /**
+     * Serializes the predicate list of the given subject.
+     *
+     * @param {Graph} graph
+     * The graph to serialize.
+     *
+     * @param {Profile} profile
+     * The profile used to shorten the IRIs of named nodes.
+     *
+     * @param {RDFNode} subject
+     * The subject to match.
+     *
+     * @param {Number} indentationLevel
+     * How far to indent each line.
+     *
+     * @return {String}
+     * The result.
+     *
+     * @private
+     */
+    serializePredicateList(graph, profile, subject, indentationLevel) {
+        let result = &quot;&quot;;
+        let first = true;
+
+        for (let predicate of graph.predicates(subject)) {
+            const punctuation      = first ? &quot;&quot; : &quot;;\n&quot;;
+            const indentation      = first ? &quot;&quot; : this.indentation(indentationLevel);
+            const nodeString       = this.serializeNode(profile, predicate) + &quot; &quot;;
+            const objectListString = this.serializeObjectList(
+                graph,
+                profile,
+                subject,
+                predicate,
+                indentationLevel + nodeString.length
+            );
+            result += punctuation + indentation + nodeString + objectListString;
+
+            first = false;
+        }
+
+        return result;
+    }
+
+    /**
+     * Serializes the object list of the given subject and predicate.
+     *
+     * @param {Graph} graph
+     * The graph to serialize.
+     *
+     * @param {Profile} profile
+     * The profile used to shorten the IRIs of named nodes.
+     *
+     * @param {RDFNode} subject
+     * The subject to match.
+     *
+     * @param {RDFNode} predicate
+     * The predicate to match.
+     *
+     * @param {Number} indentationLevel
+     * How far to indent each line.
+     *
+     * @return {String}
+     * The result.
+     *
+     * @private
+     */
+    serializeObjectList(graph, profile, subject, predicate, indentationLevel) {
+        let result = &quot;&quot;;
+        let first = true;
+
+        for (let object of graph.objects(subject, predicate)) {
+            const punctuation = first ? &quot;&quot; : &quot;,\n&quot;;
+            const indentation = first ? &quot;&quot; : this.indentation(indentationLevel);
+            const nodeString  = this.serializeNode(profile, object) + &quot; &quot;;
+            result += punctuation + indentation + nodeString;
+
+            first = false;
+        }
+
+        return result;
+    }
+
+    /**
+     * Serializes the given RDFNode.
+     *
+     * @param {Profile} profile
+     * The profile used to shorten the IRIs of named nodes.
+     *
+     * @param {RDFNode} node
+     * The node to serialize.
+     *
+     * @return {String}
+     * The result.
+     *
+     * @private
+     */
+    serializeNode(profile, node) {
+        if (node.interfaceName === &quot;NamedNode&quot;) {
+            let expanded = node.toString();
+            let shrunk   = profile.prefixes.shrink(expanded);
+            if (expanded === shrunk) {
+                return `&lt;${expanded}&gt;`;
+            } else if (shrunk.startsWith(&quot;:&quot;)) {
+                return `&lt;${shrunk.slice(1)}&gt;`;
+            } else {
+                return shrunk;
+            }
+        } else {
+            return node.toNT();
+        }
+    }
+
+    /**
+     * Creates a string with the given number of spaces.
+     *
+     * @param {Number} length
+     * The length of the string.
+     *
+     * @private
+     */
+    indentation(length) {
+        let result = &quot;&quot;;
+        for (let i = 0; i &lt; length; i++) {
+            result += &quot; &quot;;
+        }
+        return result;
+    }
+
+    /**
+     * Turns a graph into a Turtle string.
+     *
+     * @param {Graph} graph
+     * The graph to serialize.
+     *
+     * @param {Profile} [profile]
+     * The profile used to shorten the IRIs of named nodes.
+     *
+     * @return {String}
+     * The Turtle string.
+     *
+     * @see https://www.w3.org/TR/rdf-interfaces/#widl-DataSerializer-serialize-any-Graph-graph
+     */
+    serialize(graph, profile = new Profile()) {
+        return this.serializeProfile(profile) + this.serializeGraph(graph, profile);
+    }
+}
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(0.4.7)</span></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

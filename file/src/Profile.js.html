@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../">
+  <title data-ice="title">src/Profile.js | JavaScript RDF API Document</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  
+  
+  <script src="script/manual.js"></script>
+</head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  <a href="./manual/index.html" data-ice="manualHeaderLink">Manual</a>
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <a data-ice="repoURL" href="https://github.com/Ignavia/js-rdf.git" class="repo-url-github">Repository</a>
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/BlankNode.js~BlankNode.html">BlankNode</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/Graph.js~Graph.html">Graph</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/Literal.js~Literal.html">Literal</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/NamedNode.js~NamedNode.html">NamedNode</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/PrefixMap.js~PrefixMap.html">PrefixMap</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/Profile.js~Profile.html">Profile</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/RDFEnvironment.js~RDFEnvironment.html">RDFEnvironment</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/RDFNode.js~RDFNode.html">RDFNode</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/TermMap.js~TermMap.html">TermMap</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/Triple.js~Triple.html">Triple</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/TurtleReader.js~TurtleReader.html">TurtleReader</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/TurtleWriter.js~TurtleWriter.html">TurtleWriter</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-xmlSchemaTypes">xmlSchemaTypes</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">n3</div><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-N3Lexer">N3Lexer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-N3Parser">N3Parser</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">src/Profile.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import PrefixMap from &quot;./PrefixMap.js&quot;;
+import TermMap   from &quot;./TermMap.js&quot;;
+
+/**
+ * Provides an easy to use context for negotiating between CURIEs, Terms and
+ * IRIs.
+ *
+ * @see https://www.w3.org/TR/rdf-interfaces/#profiles
+ */
+export default class Profile {
+
+    /**
+     * @param {Object} conf
+     * The configuration object.
+     *
+     * @param {PrefixMap} [conf.prefixes]
+     * The prefix map to use.
+     *
+     * @param {TermMap} {conf.terms}
+     * The term map to use.
+     */
+    constructor({ prefixes = new PrefixMap(), terms = new TermMap() } = {}) {
+
+        /**
+         * The prefix map.
+         *
+         * @type {PrefixMap}
+         * @private
+         */
+        this.prefixes = prefixes;
+
+        /**
+         * The term map.
+         *
+         * @type {TermMap}
+         * @private
+         */
+        this.terms = terms;
+    }
+
+    /**
+     * Given an term or CURIE this method will return an IRI.
+     *
+     * @param {String} toResolve
+     * A string term or CURIE.
+     *
+     * @return {String}
+     * The corresponding IRI.
+     *
+     * @see https://www.w3.org/TR/rdf-interfaces/#widl-Profile-resolve-DOMString-DOMString-toresolve
+     */
+    resolve(toResolve) {
+        if (toResolve.includes(&quot;:&quot;)) {
+            return this.prefixes.resolve(toResolve);
+        } else {
+            return this.terms.resolve(toResolve);
+        }
+    }
+
+    /**
+     * Returns a string representing the given RDFNode. Literals might be
+     * replaced with terms stored in this profile, while names nodes might be
+     * shrunk to a CURIE. If no matches are found in this profile, the normal
+     * toString method is called.
+     *
+     * @param {RDFNode} node
+     * The node to stringify.
+     *
+     * @param {Object} [conf]
+     * The configuration object.
+     *
+     * @param {Boolean} [conf.shrinkTerms=true]
+     * Whether terms should be shrunk.
+     *
+     * @param {Boolean} [conf.shrinkPrefixes=true]
+     * Whether prefixes should be shrunk.
+     *
+     * @return {String}
+     * The resulting string.
+     */
+    nodeToString(node, {shrinkTerms = true, shrinkPrefixes = true} = {}) {
+        if (shrinkTerms &amp;&amp; node.interfaceName === &quot;Literal&quot;) {
+            return this.terms.shrink(node.toString());
+        } else if (shrinkPrefixes &amp;&amp; node.interfaceName === &quot;NamedNode&quot;) {
+            return this.prefixes.shrink(node.toString());
+        } else {
+            return node.toString();
+        }
+    }
+
+    /**
+     * This method sets the default prefix for use when resolving CURIEs without
+     * a prefix, for example &quot;:me&quot;
+     *
+     * @param {String} iri
+     * The IRI to use as the default prefix.
+     *
+     * @see https://www.w3.org/TR/rdf-interfaces/#widl-Profile-setDefaultPrefix-void-DOMString-iri
+     */
+    setDefaultPrefix(iri) {
+        this.prefixes.setDefault(iri);
+    }
+
+    /**
+     * This method associates an IRI with a prefix.
+     *
+     * @param {String} prefix
+     * The prefix to set. It must not contain any whitespace.
+     *
+     * @param {String} iri
+     * The IRI to associate with the prefix.
+     *
+     * @see https://www.w3.org/TR/rdf-interfaces/#widl-Profile-setPrefix-void-DOMString-prefix-DOMString-iri
+     */
+    setPrefix(prefix, iri) {
+        this.prefixes.set(prefix, iri);
+    }
+
+    /**
+     * This method sets the default vocabulary for use when resolving unknown
+     * terms.
+     *
+     * @param {String} iri
+     * The IRI to use as the default vocabulary.
+     *
+     * @see https://www.w3.org/TR/rdf-interfaces/#widl-Profile-setDefaultVocabulary-void-DOMString-iri
+     */
+    setDefaultVocabulary(iri) {
+        this.terms.setDefault(iri);
+    }
+
+    /**
+     * This method associates an IRI with a term.
+     *
+     * @param {String} term
+     * The term to set. It must not contain any whitespace or the
+     * : (single-colon) character.
+     *
+     * @param {String} iri
+     * The IRI to associate with the term.
+     *
+     * @see https://www.w3.org/TR/rdf-interfaces/#widl-Profile-setTerm-void-DOMString-term-DOMString-iri
+     */
+    setTerm(term, iri) {
+        this.terms.set(term, iri);
+    }
+
+    /**
+     * This method adds all prefixes and terms from the given profile. It allows
+     * easy updating and merging of different profiles, such as those exposed
+     * by parsers.
+     *
+     * @param {Profile} profile
+     * The profile to import.
+     *
+     * @param {Boolean} override
+     * If true then conflicting terms and prefixes will be overridden by those
+     * specified on the Profile being imported. By default imported terms and
+     * prefixes augment the existing set.
+     *
+     * @return {Profile}
+     * This profile to allow chaining.
+     *
+     * @see https://www.w3.org/TR/rdf-interfaces/#widl-Profile-importProfile-Profile-Profile-profile-boolean-override
+     */
+    importProfile(profile, override = false) {
+        this.prefixes.addAll(profile.prefixes, override);
+        this.terms.addAll(profile.terms, override);
+    }
+
+    /**
+     * Returns a copy of this Profile.
+     *
+     * @return {Profile}
+     * A copy of this Profile.
+     */
+    clone() {
+        return new Profile({
+            prefixes: this.prefixes.clone(),
+            terms:    this.terms.clone()
+        });
+    }
+}
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(0.4.7)</span></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

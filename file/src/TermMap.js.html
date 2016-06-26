@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../">
+  <title data-ice="title">src/TermMap.js | JavaScript RDF API Document</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  
+  
+  <script src="script/manual.js"></script>
+</head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  <a href="./manual/index.html" data-ice="manualHeaderLink">Manual</a>
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <a data-ice="repoURL" href="https://github.com/Ignavia/js-rdf.git" class="repo-url-github">Repository</a>
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/BlankNode.js~BlankNode.html">BlankNode</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/Graph.js~Graph.html">Graph</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/Literal.js~Literal.html">Literal</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/NamedNode.js~NamedNode.html">NamedNode</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/PrefixMap.js~PrefixMap.html">PrefixMap</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/Profile.js~Profile.html">Profile</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/RDFEnvironment.js~RDFEnvironment.html">RDFEnvironment</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/RDFNode.js~RDFNode.html">RDFNode</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/TermMap.js~TermMap.html">TermMap</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/Triple.js~Triple.html">Triple</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/TurtleReader.js~TurtleReader.html">TurtleReader</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/TurtleWriter.js~TurtleWriter.html">TurtleWriter</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-xmlSchemaTypes">xmlSchemaTypes</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">n3</div><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-N3Lexer">N3Lexer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-N3Parser">N3Parser</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">src/TermMap.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import {Tolkien1To1Map} from &quot;@ignavia/util&quot;;
+
+/**
+ * Maps from terms to IRIs and back.
+ *
+ * @see https://www.w3.org/TR/rdf-interfaces/#term-maps
+ */
+export default class TermMap {
+
+    /**
+     * @param {Array} [initialValue=[]]
+     * An array with [term, iri] entries.
+     */
+    constructor(initialValues = []) {
+
+        /**
+         * Maps from terms to IRIs and back.
+         *
+         * @type {Tolkien1To1Map}
+         * @private
+         */
+        this.termToIRI = new Tolkien1To1Map();
+
+        /**
+         * The default IRI to use if a term cannot be resolved.
+         *
+         * @type {String}
+         * @private
+         */
+        this.default = undefined;
+
+        // Add initial values
+        for (let [term, iri] of initialValues) {
+            this.set(term, iri);
+        }
+    }
+
+    /**
+     * The number of entries in this TermMap.
+     *
+     * @type {Number}
+     */
+    get size() {
+        return this.termToIRI.size;
+    }
+
+    /**
+     * Connects the given term and IRI.
+     *
+     * @param {String} term
+     * The term to use. It must not contain any whitespace or the : (single-colon)
+     * character.
+     *
+     * @param {String} iri
+     * The IRI to use.
+     *
+     * @return {TermMap}
+     * The TermMap to make the object chainable.
+     *
+     * @see https://www.w3.org/TR/rdf-interfaces/#widl-TermMap-set-omittable-setter-void-DOMString-term-DOMString-iri
+     */
+    set(term, iri) {
+        this.termToIRI.add(term, iri);
+        return this;
+    }
+
+    /**
+     * Tests if an entry for the given term exists.
+     *
+     * @param {String} term
+     * The term to test.
+     *
+     * @return {Boolean}
+     * Whether an entry for the given term exists.
+     */
+    hasTerm(term) {
+        return this.termToIRI.hasX(term);
+    }
+
+    /**
+     * Tests if an entry for the given IRI exists.
+     *
+     * @param {String} iri
+     * The IRI to test.
+     *
+     * @return {Boolean}
+     * Whether an entry for the given IRI exists.
+     */
+    hasIRI(iri) {
+        return this.termToIRI.hasY(iri);
+    }
+
+    /**
+     * Removes the entry for the given term from this TermMap.
+     *
+     * @param {String} term
+     * The term to remove.
+     *
+     * @see https://www.w3.org/TR/rdf-interfaces/#widl-TermMap-remove-omittable-deleter-void-DOMString-term
+     */
+    remove(term) {
+        this.termToIRI.deleteX(term);
+    }
+
+    /**
+     * Given a valid term for which an IRI is known, this method will return
+     * the resulting IRI. If no term is known and a default has been set, the
+     * IRI is obtained by concatenating the term and the default iri. Otherwise
+     * null is returned.
+     *
+     * @param {String} term
+     * The term to resolve.
+     *
+     * @return {String}
+     * The corresponding IRI.
+     *
+     * @see https://www.w3.org/TR/rdf-interfaces/#widl-TermMap-resolve-DOMString-DOMString-term
+     */
+    resolve(term) {
+        if (this.termToIRI.hasX(term)) {
+            return this.termToIRI.convertXToY(term)[0];
+        } else if (this.default) {
+            return this.default + term;
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Given an IRI for which an term is known this method returns a term. If
+     * no term is known the original IRI is returned.
+     *
+     * @param {String} iri
+     * The IRI to shrink.
+     *
+     * @return {String}
+     * The corresponding term.
+     *
+     * @see https://www.w3.org/TR/rdf-interfaces/#widl-TermMap-shrink-DOMString-DOMString-iri
+     */
+    shrink(iri) {
+        if (this.termToIRI.hasY(iri)) {
+            return this.termToIRI.convertYToX(iri)[0];
+        } else {
+            return iri;
+        }
+    }
+
+    /**
+     * Sets the default IRI to be used when an term cannot be resolved.
+     *
+     * @param {String} iri
+     * The default IRI.
+     *
+     * @see https://www.w3.org/TR/rdf-interfaces/#widl-TermMap-setDefault-void-DOMString-iri
+     */
+    setDefault(iri) {
+        this.default = iri;
+    }
+
+    /**
+     * Imports all entries from the given TermMap.
+     *
+     * @param {TermMap} terms
+     * The TermMap to import.
+     *
+     * @param {Boolean} [override=false]
+     * Whether conflicting entries in this map should be overriden by the ones
+     * in the given map.
+     *
+     * @return {TermMap}
+     * This TermMap to make the method chainable.
+     *
+     * @see https://www.w3.org/TR/rdf-interfaces/#widl-TermMap-addAll-TermmMap-TermMap-terms-boolean-override
+     */
+    addAll(terms, override = false) {
+        for (let [term, iri] of terms) {
+            if (override || !this.termToIRI.hasEither(term, iri)) {
+                this.set(term, iri);
+            }
+        }
+        return this;
+    }
+
+    /**
+     * Yields all terms in this map.
+     */
+    * terms() {
+        yield* this.termToIRI.xs();
+    }
+
+    /**
+     * Yields all IRIs in this map.
+     */
+    * iris() {
+        yield* this.termToIRI.ys();
+    }
+
+    /**
+     * Yields all term-IRI-entries in this map.
+     */
+    * entries() {
+        yield* this.termToIRI.entries();
+    }
+
+    /**
+     * Yields all term-IRI-entries in this map.
+     */
+    [Symbol.iterator]() {
+        return this.entries();
+    }
+
+    /**
+     * Returns a copy of this TermMap.
+     *
+     * @return {TermMap}
+     * A copy of this TermMap.
+     */
+    clone() {
+        return new TermMap(this);
+    }
+}
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(0.4.7)</span></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../">
+  <title data-ice="title">src/Literal.js | JavaScript RDF API Document</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  
+  
+  <script src="script/manual.js"></script>
+</head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  <a href="./manual/index.html" data-ice="manualHeaderLink">Manual</a>
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <a data-ice="repoURL" href="https://github.com/Ignavia/js-rdf.git" class="repo-url-github">Repository</a>
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/BlankNode.js~BlankNode.html">BlankNode</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/Graph.js~Graph.html">Graph</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/Literal.js~Literal.html">Literal</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/NamedNode.js~NamedNode.html">NamedNode</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/PrefixMap.js~PrefixMap.html">PrefixMap</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/Profile.js~Profile.html">Profile</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/RDFEnvironment.js~RDFEnvironment.html">RDFEnvironment</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/RDFNode.js~RDFNode.html">RDFNode</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/TermMap.js~TermMap.html">TermMap</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/Triple.js~Triple.html">Triple</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/TurtleReader.js~TurtleReader.html">TurtleReader</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/TurtleWriter.js~TurtleWriter.html">TurtleWriter</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-xmlSchemaTypes">xmlSchemaTypes</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">n3</div><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-N3Lexer">N3Lexer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-N3Parser">N3Parser</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">src/Literal.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import RDFNode                 from &quot;./RDFNode.js&quot;;
+import {xmlSchemaTypes as xsd} from &quot;./xmlSchemaTypes.js&quot;;
+
+/**
+ * Turns the given value into a primitive value using the [Symbol.toPrimitive]
+ * method if it exists.
+ *
+ * @param {*} v
+ * The value to convert.
+ *
+ * @return {*}
+ * The resulting primitive.
+ *
+ * @ignore
+ */
+function toPrimitive(v) {
+    if (v === undefined || v === null) {
+        return v;
+    } else if (typeof v[Symbol.toPrimitive] === &quot;function&quot;) {
+        return v[Symbol.toPrimitive](&quot;number&quot;);
+    } else if (typeof v.valueOf === &quot;function&quot;) {
+        return v.valueOf();
+    } else if (typeof v.toString === &quot;function&quot;) {
+        return v.toString();
+    }
+    return v;
+}
+
+/**
+ * Lists how to convert a string to a specific datatype.
+ *
+ * @type {object}
+ * @ignore
+ */
+const converter = {
+    [xsd.string]:             String,
+    [xsd.boolean]:            (s) =&gt; s === &quot;true&quot;,
+    [xsd.dateTime]:           (s) =&gt; new Date(s),
+    [xsd.date]:               (s) =&gt; new Date(s),
+    //[xsd.time]:               (s) =&gt; new Date(s),
+    [xsd.double]:             Number,
+    [xsd.float]:              Number,
+    [xsd.decimal]:            Number,
+    [xsd.positiveInteger]:    Number,
+    [xsd.nonNegativeInteger]: Number,
+    [xsd.integer]:            Number,
+    [xsd.nonPositiveInteger]: Number,
+    [xsd.negativeInteger]:    Number,
+    [xsd.long]:               Number,
+    [xsd.int]:                Number,
+    [xsd.short]:              Number,
+    [xsd.byte]:               Number,
+    [xsd.unsignedLong]:       Number,
+    [xsd.unsignedInt]:        Number,
+    [xsd.unsignedShort]:      Number,
+    [xsd.unsignedByte]:       Number
+};
+
+/**
+ * The IRI of the langString datatype.
+ *
+ * @type {string}
+ * @ignore
+ */
+const langString = &quot;http://www.w3.org/1999/02/22-rdf-syntax-ns#langString&quot;;
+
+/**
+ * Represents an RDF literal.
+ *
+ * @see https://www.w3.org/TR/rdf-interfaces/#literals
+ */
+export default class Literal extends RDFNode {
+
+    /**
+     * Creates a literal from an N-Triples string.
+     *
+     * @param {String} ntString
+     * The N-Triples string to parse.
+     *
+     * @return {Literal}
+     * The created literal.
+     *
+     * @throws
+     * If the string cannot be parsed.
+     */
+    static fromNT(ntString) {
+        const normalRegex   = /^&quot;(.*)&quot;$/;
+        const languageRegex = /^&quot;(.*)&quot;@(.*)$/;
+        const datatypeRegex = /^&quot;(.*)&quot;\^\^&lt;(.*)&gt;$/;
+
+        if (normalRegex.test(ntString)) {
+            const [, value] = normalRegex.exec(ntString);
+            return new Literal(value);
+        } else if (languageRegex.test(ntString)) {
+            const [, value, language] = languageRegex.exec(ntString);
+            return new Literal(value, {language});
+        } else if (datatypeRegex.test(ntString)) {
+            const [, value, datatype] = datatypeRegex.exec(ntString);
+            return new Literal(value, {datatype});
+        } else {
+            throw new Error(`Could not parse ${ntString}.`);
+        }
+    }
+
+    /**
+     * Checks if the given string is a serialized literal in the N-Triples
+     * format.
+     *
+     * @param {string} s
+     * The string to check.
+     *
+     * @return {Boolean}
+     * The result of the test.
+     */
+    static isNTLiteral(s) {
+        const regex = /^&quot;.*&quot;(?:@.*|\^\^&lt;.*&gt;)?$/;
+        return regex.test(s);
+    }
+
+    /**
+     * @param {String} value
+     * The value of this literal.
+     *
+     * @param {Object} options
+     * Contains the remaining parameters.
+     *
+     * @param {String} [options.language]
+     * The language of this literal.
+     *
+     * @param {String} [options.datatype]
+     * The datatype of this literal.
+     */
+    constructor(value, {language = null, datatype = xsd.string} = {}) {
+        super(&quot;Literal&quot;, value);
+
+        /**
+         * The language of this literal.
+         *
+         * @type {String}
+         */
+        this.language = language;
+
+        /**
+         * The datatype of this literal.
+         *
+         * @type {String}
+         */
+        this.datatype = language === null ? datatype : langString;
+    }
+
+    /**
+     * The value of this literal.
+     */
+    get value() {
+        return this.nominalValue;
+    }
+
+    /**
+     * @override
+     */
+    equals(toCompare) {
+        if (toCompare instanceof RDFNode) {
+            return this.interfaceName === toCompare.interfaceName &amp;&amp;
+                   this.nominalValue  === toCompare.nominalValue  &amp;&amp;
+                   this.language      === toCompare.language      &amp;&amp;
+                  (this.datatype      === toCompare.datatype || this.language !== null);
+        }
+        return toPrimitive(this) === toPrimitive(toCompare);
+    }
+
+    /**
+     * @override
+     */
+    valueOf() {
+        if (this.language === null &amp;&amp; this.datatype !== null &amp;&amp; converter[this.datatype.toString()]) {
+            return converter[this.datatype.toString()](this.nominalValue);
+        }
+        return this.nominalValue;
+    }
+
+    /**
+     * @override
+     */
+    toString() {
+        return `${this.nominalValue}`;
+    }
+
+    /**
+     * @override
+     */
+    [Symbol.toPrimitive](hint = &quot;default&quot;) {
+        if (hint === &quot;string&quot;) {
+            return this.toString();
+        }
+        return toPrimitive(this.valueOf());
+    }
+
+    /**
+     * @override
+     */
+    toNT() {
+        if (this.language !== null) {
+            return `&quot;${this.nominalValue}&quot;@${this.language}`;
+        } else if (this.datatype !== null) {
+            return `&quot;${this.nominalValue}&quot;^^&lt;${this.datatype}&gt;`;
+        } else {
+            return `&quot;${this.nominalValue}&quot;`;
+        }
+    }
+}
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(0.4.7)</span></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

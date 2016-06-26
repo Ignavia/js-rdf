@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../">
+  <title data-ice="title">src/TurtleReader.js | JavaScript RDF API Document</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  
+  
+  <script src="script/manual.js"></script>
+</head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  <a href="./manual/index.html" data-ice="manualHeaderLink">Manual</a>
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <a data-ice="repoURL" href="https://github.com/Ignavia/js-rdf.git" class="repo-url-github">Repository</a>
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/BlankNode.js~BlankNode.html">BlankNode</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/Graph.js~Graph.html">Graph</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/Literal.js~Literal.html">Literal</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/NamedNode.js~NamedNode.html">NamedNode</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/PrefixMap.js~PrefixMap.html">PrefixMap</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/Profile.js~Profile.html">Profile</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/RDFEnvironment.js~RDFEnvironment.html">RDFEnvironment</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/RDFNode.js~RDFNode.html">RDFNode</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/TermMap.js~TermMap.html">TermMap</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/Triple.js~Triple.html">Triple</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/TurtleReader.js~TurtleReader.html">TurtleReader</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/TurtleWriter.js~TurtleWriter.html">TurtleWriter</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-xmlSchemaTypes">xmlSchemaTypes</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">n3</div><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-N3Lexer">N3Lexer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-N3Parser">N3Parser</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">src/TurtleReader.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import n3Parser from &quot;./n3/n3Parser.js&quot;;
+
+import Graph     from &quot;./Graph.js&quot;;
+import Triple    from &quot;./Triple.js&quot;;
+import BlankNode from &quot;./BlankNode.js&quot;;
+import Literal   from &quot;./Literal.js&quot;;
+import NamedNode from &quot;./NamedNode.js&quot;;
+import Profile   from &quot;./Profile.js&quot;;
+
+/**
+ * Transforms a Turtle string into a graph and a profile.
+ *
+ * @see https://www.w3.org/TR/rdf-interfaces/#data-parsers
+ */
+export default class TurtleReader {
+
+    /**
+     *
+     */
+    constructor() {
+
+        /**
+         * The N3.js parser.
+         *
+         * @type {*}
+         * @private
+         */
+        this.parser = n3Parser();
+    }
+
+    /**
+     * Checks if the given string represents an IRI.
+     *
+     * @param {String} entityString
+     * The entity to test.
+     *
+     * @return {Boolean}
+     * Whether the string represents an IRI.
+     */
+    isIRI(entityString) {
+        return !this.isLiteral(entityString) &amp;&amp; !this.isBlank(entityString);
+    }
+
+    /**
+     * Checks if the given string represents a literal.
+     *
+     * @param {String} entityString
+     * The entity to test.
+     *
+     * @return {Boolean}
+     * Whether the string represents a literal.
+     */
+    isLiteral(entityString) {
+        return entityString.startsWith(`&quot;`);
+    }
+
+    /**
+     * Checks if the given string represents a blank node.
+     *
+     * @param {String} entityString
+     * The entity to test.
+     *
+     * @return {Boolean}
+     * Whether the string represents a blank node.
+     */
+    isBlank(entityString) {
+        return entityString.startsWith(&quot;_:&quot;);
+    };
+
+    /**
+     * Returns the value of the literal.
+     *
+     * @param {String} literalString
+     * The literal to parse.
+     *
+     * @return {String}
+     * The value of the literal.
+     *
+     * @throws {Error}
+     * If the provided string does not represent a literal.
+     *
+     * @private
+     */
+    getLiteralValue(literalString) {
+        const regex = /^&quot;([^]*)&quot;/;
+
+        if (!regex.test(literalString)) {
+            throw new Error(`${literalString} is not a literal.`);
+        }
+
+        const [, value] = regex.exec(literalString);
+        return value;
+    }
+
+    /**
+     * Returns the datatype of the literal.
+     *
+     * @param {String} literalString
+     * The literal to parse.
+     *
+     * @return {String}
+     * The datatype of the literal.
+     *
+     * @throws {Error}
+     * If the provided string does not represent a literal.
+     *
+     * @private
+     */
+    getLiteralType(literalString) {
+        const regex = /^&quot;[^]*&quot;(?:\^\^([^&quot;]+)|(@)[^@&quot;]+)?$/;
+
+        if (!regex.test(literalString)) {
+            throw new Error(`${literalString} is not a literal.`);
+        }
+
+        const [, type, language] = regex.exec(literalString);
+        if (type) {
+            return type;
+        } else if (language) {
+            return &quot;http://www.w3.org/1999/02/22-rdf-syntax-ns#langString&quot;;
+        } else {
+            return &quot;http://www.w3.org/2001/XMLSchema#string&quot;;
+        }
+    }
+
+    /**
+     * Returns the language of the literal.
+     *
+     * @param {String} literalString
+     * The literal to parse.
+     *
+     * @return {String}
+     * The language of the literal.
+     *
+     * @throws {Error}
+     * If the provided string does not represent a literal.
+     *
+     * @private
+     */
+    getLiteralLanguage(literalString) {
+        const regex = /^&quot;[^]*&quot;(?:@([^@&quot;]+)|\^\^[^&quot;]+)?$/;
+
+        if (!regex.test(literalString)) {
+            throw new Error(`${literalString} is not a literal.`);
+        }
+
+        const [, language] = regex.exec(literalString);
+        if (language) {
+            return language.toLowerCase();
+        } else {
+            return undefined;
+        }
+    };
+
+    /**
+     * Transforms an N3 entity (subject, predicate, object as a string) into the
+     * corresponding RDFNode.
+     *
+     * @param {String} entityString
+     * The word to transform.
+     *
+     * @param {Object} options
+     * The options object.
+     *
+     * @param {Boolean} [options.allowBlank=true]
+     * Whether blank nodes are allowed.
+     *
+     * @param {Boolean} [options.allowNamed=true]
+     * Whether named nodes are allowed.
+     *
+     * @param {Boolean} [options.allowLiteral=true]
+     * Whether literals are allowed.
+     *
+     * @return {RDFNode}
+     * The respective RDFNode.
+     *
+     * @throws {Error}
+     * If the word is invalid.
+     */
+    parseN3Entity(entityString, {allowBlank = true, allowNamed = true, allowLiteral = true} = {}) {
+        if (allowBlank &amp;&amp; this.isBlank(entityString)) {
+            entityString = entityString.replace(/^_:b[0-9]+_/, &quot;&quot;);
+            return new BlankNode(entityString);
+        } else if (allowNamed &amp;&amp; this.isIRI(entityString)) {
+            return new NamedNode(entityString);
+        } else if (allowLiteral &amp;&amp; this.isLiteral(entityString)) {
+            const value    = this.getLiteralValue(entityString);
+            const language = this.getLiteralLanguage(entityString);
+            const datatype = this.getLiteralType(entityString);
+            return new Literal(value, {language, datatype});
+        } else {
+            throw new Error(`Could not parse ${entityString}.`);
+        }
+    }
+
+    /**
+     * Transforms the given subject string into an RDFNode.
+     *
+     * @param {String} subjectString
+     * The string representing the subject.
+     *
+     * @return {RDFNode}
+     * The created RDFNode.
+     *
+     * @throw {Error}
+     * If the subject string is invalid. Only named and blank nodes are allowed
+     * as subject.
+     *
+     * @private
+     */
+    parseSubject(subjectString) {
+        try {
+            return this.parseN3Entity(subjectString, {allowLiteral: false});
+        } catch (err) {
+            throw new Error(`${subjectString} is not a valid subject.`);
+        }
+    }
+
+    /**
+     * Transforms the given predicate string into an RDFNode.
+     *
+     * @param {String} predicateString
+     * The string representing the predicate.
+     *
+     * @return {RDFNode}
+     * The created RDFNode.
+     *
+     * @throws {Error}
+     * If the predicate string is invalid. Only named nodes are allowed as
+     * predicate.
+     *
+     * @private
+     */
+    parsePredicate(predicateString) {
+        try {
+            return this.parseN3Entity(predicateString, {allowBlank: false, allowLiteral: false});
+        } catch (err) {
+            throw new Error(`${predicateString} is not a valid predicate.`);
+        }
+    }
+
+    /**
+     * Transforms the given object string into an RDFNode.
+     *
+     * @param {String} objectString
+     * The string representing the object.
+     *
+     * @return {RDFNode}
+     * The created RDFNode.
+     *
+     * @throws {Error}
+     * If the object string is invalid.
+     *
+     * @private
+     */
+    parseObject(objectString) {
+        try {
+            return this.parseN3Entity(objectString);
+        } catch (err) {
+            throw new Error(`${objectString} is not a valid object.`);
+        }
+    }
+
+    /**
+     * Transform an N3 triple object into a triple object of our
+     * implementation.
+     *
+     * @param {*} n3Triple
+     * A triple made by the N3 parser.
+     *
+     * @return {Triple}
+     * The corresponding triple.
+     *
+     * @private
+     */
+    parseN3Triple(n3Triple) {
+        const subject   = this.parseSubject(n3Triple.subject);
+        const predicate = this.parsePredicate(n3Triple.predicate);
+        const object    = this.parseObject(n3Triple.object);
+        return new Triple(subject, predicate, object);
+    }
+
+    /**
+     * Parses a Turtle string an returns a graph and a profile.
+     *
+     * @param {String} s
+     * The Turtle string to parse.
+     *
+     * @param {Object} options
+     * The options object.
+     *
+     * @param {Function} [options.filter]
+     * Determines which triple to include in the resulting graph.
+     *
+     * @param {Graph} [options.graph]
+     * The graph to add the triples to.
+     *
+     * @param {Profile} [options.profile]
+     * The profile to add the prefixes and terms to.
+     *
+     * @return {Promise}
+     * A promise that eventually resolves to the resulting graph and profile.
+     * If there is an error, the promise is rejected.
+     *
+     * @see https://www.w3.org/TR/rdf-interfaces/#widl-DataParser-parse-boolean-any-toparse-ParserCallback-callback-DOMString-base-TripleFilter-filter-Graph-graph
+     */
+    parse(s, { filter = ()=&gt;true, graph = new Graph(), profile = new Profile() } = {}) {
+        return new Promise((resolve, reject) =&gt; this.parser.parse(
+            s,
+            (err, n3Triple, prefixes) =&gt; {
+                if (err) {
+                    reject(err);
+                }
+                if (n3Triple) {
+                    const triple = this.parseN3Triple(n3Triple);
+                    if (filter(triple)) {
+                        graph.add(triple);
+                    }
+                }
+                if (prefixes) {
+                    resolve({graph, profile});
+                }
+            },
+            (prefix, iri) =&gt; {
+                profile.setPrefix(prefix, iri);
+            }
+        ));
+    }
+}</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(0.4.7)</span></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../">
+  <title data-ice="title">Changelog</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  
+  
+  <script src="script/manual.js"></script>
+</head>
+<body class="layout-container manual-root" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  <a href="./manual/index.html" data-ice="manualHeaderLink">Manual</a>
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <a data-ice="repoURL" href="https://github.com/Ignavia/js-rdf.git" class="repo-url-github">Repository</a>
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div class="manual-toc-root">
+  
+<div data-ice="manual" data-toc-name="reference">
+    <h1 class="manual-toc-title"><a href="identifiers.html" data-ice="title">Reference</a></h1>
+    <ul class="manual-toc">
+      
+    <li data-ice="manualNav" class="indent-h1"><span class="manual-dot"></span><a href="identifiers.html#class" data-ice="link">Class</a></li>
+<li data-ice="manualNav" class="indent-h1"><span class="manual-dot"></span><a href="identifiers.html#function" data-ice="link">Function</a></li>
+<li data-ice="manualNav" class="indent-h1"><span class="manual-dot"></span><a href="identifiers.html#variable" data-ice="link">Variable</a></li>
+</ul>
+  </div>
+<div data-ice="manual" data-toc-name="changelog">
+    <h1 class="manual-toc-title"><a href="manual/changelog.html" data-ice="title">Changelog</a></h1>
+    <ul class="manual-toc">
+      
+    <li data-ice="manualNav" class="indent-h1"><span class="manual-dot"></span><a href="manual/changelog.html#changelog" data-ice="link">Changelog</a></li>
+<li data-ice="manualNav" class="indent-h2"><span class="manual-dot"></span><a href="manual/changelog.html#2-2-0-2016-06-26-" data-ice="link">2.2.0 (2016-06-26)</a></li>
+<li data-ice="manualNav" class="indent-h2"><span class="manual-dot"></span><a href="manual/changelog.html#2-1-0-2016-06-23-" data-ice="link">2.1.0 (2016-06-23)</a></li>
+<li data-ice="manualNav" class="indent-h2"><span class="manual-dot"></span><a href="manual/changelog.html#2-0-0-2016-06-18-" data-ice="link">2.0.0 (2016-06-18)</a></li>
+<li data-ice="manualNav" class="indent-h2"><span class="manual-dot"></span><a href="manual/changelog.html#1-8-0-2016-06-18-" data-ice="link">1.8.0 (2016-06-18)</a></li>
+<li data-ice="manualNav" class="indent-h2"><span class="manual-dot"></span><a href="manual/changelog.html#1-7-0-2016-06-11-" data-ice="link">1.7.0 (2016-06-11)</a></li>
+<li data-ice="manualNav" class="indent-h2"><span class="manual-dot"></span><a href="manual/changelog.html#1-6-0-2016-06-07-" data-ice="link">1.6.0 (2016-06-07)</a></li>
+<li data-ice="manualNav" class="indent-h2"><span class="manual-dot"></span><a href="manual/changelog.html#1-5-0-2016-06-06-" data-ice="link">1.5.0 (2016-06-06)</a></li>
+<li data-ice="manualNav" class="indent-h2"><span class="manual-dot"></span><a href="manual/changelog.html#1-4-0-2016-06-06-" data-ice="link">1.4.0 (2016-06-06)</a></li>
+<li data-ice="manualNav" class="indent-h2"><span class="manual-dot"></span><a href="manual/changelog.html#1-3-0-2016-04-25-" data-ice="link">1.3.0 (2016-04-25)</a></li>
+<li data-ice="manualNav" class="indent-h2"><span class="manual-dot"></span><a href="manual/changelog.html#1-2-0-2016-04-08-" data-ice="link">1.2.0 (2016-04-08)</a></li>
+<li data-ice="manualNav" class="indent-h2"><span class="manual-dot"></span><a href="manual/changelog.html#1-1-0-2016-04-07-" data-ice="link">1.1.0 (2016-04-07)</a></li>
+</ul>
+  </div>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><div class="github-markdown">
+  <div class="manual-breadcrumb-list">
+    <a href="./manual/./index.html">Manual</a>
+    <span>&#xBB;</span>
+    <span data-ice="title">Changelog</span>
+  </div>
+  <div data-ice="content"><h1 id="changelog">Changelog</h1>
+<h2 id="2-2-0-2016-06-26-">2.2.0 (2016-06-26)</h2>
+<ul>
+<li>Added tests if an RDFNode is a blank node, literal or named node.</li>
+</ul>
+<h2 id="2-1-0-2016-06-23-">2.1.0 (2016-06-23)</h2>
+<ul>
+<li>Added a factory method to the RDFNode class to create instances using their N-Triples serialization.</li>
+<li>Added getters to the BlankNode, Literal and NamedNode classes for their nominal values.</li>
+</ul>
+<h2 id="2-0-0-2016-06-18-">2.0.0 (2016-06-18)</h2>
+<ul>
+<li>Added a method to test if a node or an equivalent one exists in the graph.</li>
+<li>Renamed the has method to hasTriple.</li>
+</ul>
+<h2 id="1-8-0-2016-06-18-">1.8.0 (2016-06-18)</h2>
+<ul>
+<li>Added a method to loop over the nodes in the graph.</li>
+</ul>
+<h2 id="1-7-0-2016-06-11-">1.7.0 (2016-06-11)</h2>
+<ul>
+<li>Added the option to use IDs instead of nodes and triples where applicable.</li>
+</ul>
+<h2 id="1-6-0-2016-06-07-">1.6.0 (2016-06-07)</h2>
+<ul>
+<li>Added checks if a subject or subject/predicate-combination have literals.</li>
+</ul>
+<h2 id="1-5-0-2016-06-06-">1.5.0 (2016-06-06)</h2>
+<ul>
+<li>Added iterators for subject, predicates (given a subject) and objects (given subject and predicate).</li>
+<li>Enhanced the TurtleWriter to use predicate and object list.</li>
+</ul>
+<h2 id="1-4-0-2016-06-06-">1.4.0 (2016-06-06)</h2>
+<ul>
+<li>Added maps from IDs to nodes and triples.</li>
+</ul>
+<h2 id="1-3-0-2016-04-25-">1.3.0 (2016-04-25)</h2>
+<ul>
+<li>Enhanced the Turtle writer to use prefixes.</li>
+</ul>
+<h2 id="1-2-0-2016-04-08-">1.2.0 (2016-04-08)</h2>
+<ul>
+<li>Added the method <code>nodeToString</code> to instances of Profile.</li>
+<li>Added IDs to nodes, triples and graphs.</li>
+</ul>
+<h2 id="1-1-0-2016-04-07-">1.1.0 (2016-04-07)</h2>
+<ul>
+<li>Added a parser and writer for Turtle strings.</li>
+</ul>
+</div>
+</div>
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(0.4.7)</span></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>
