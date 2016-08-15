@@ -183,8 +183,8 @@ export default class Graph {
     add(triple) {
         if (!this.hasTriple(triple)) {
             const s = toPrimitive(triple.subject);
-            const l = isLiteral(triple.object);
             const p = toPrimitive(triple.predicate);
+            const l = isLiteral(triple.object);
             const o = toPrimitive(triple.object);
 
             this.splo.add([s, p, l, o], triple);
@@ -211,6 +211,8 @@ export default class Graph {
      *
      * @param {RDFNode} node
      * The node to add.
+     *
+     * @private
      */
     addNodeToIdMap(node) {
         const count = (this.nodes.has(node.id) ?
@@ -353,8 +355,8 @@ export default class Graph {
         if (!matching.isEmpty()) {
             for (let triple of matching) {
                 const s = toPrimitive(triple.subject);
-                const l = isLiteral(triple.object);
                 const p = toPrimitive(triple.predicate);
+                const l = isLiteral(triple.object);
                 const o = toPrimitive(triple.object);
 
                 this.splo.delete([s, p, l, o], triple);
